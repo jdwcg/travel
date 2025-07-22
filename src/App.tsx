@@ -1,5 +1,3 @@
-// src/App.tsx
-import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 
 // 필요한 페이지 컴포넌트들을 임포트

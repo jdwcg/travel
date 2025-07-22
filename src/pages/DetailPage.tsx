@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';

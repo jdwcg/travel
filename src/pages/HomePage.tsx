@@ -1,12 +1,19 @@
-// src/pages/HomePage.tsx
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import ActivityIcon from '../components/ActivityIcon'; // 아이콘 컴포넌트 임포트
 
-// travelDates 데이터에 type (활동 유형) 추가
-const travelDates = [
+interface TravelDateItem {
+    id: string;
+    day: string;
+    date: number;
+    content: string;
+    type: string;
+}
+
+// 그리고 travelDates 배열 선언 부분을 이렇게 변경해주세요.
+const travelDates: TravelDateItem[] = [
     {
         id: 'day1',
         day: '수',
@@ -54,35 +61,35 @@ const travelDates = [
     },
     {
         id: 'day7',
-        day: 7,
-        content: '화',
+        day: '화',
+        date: 7,
         content:
             '협재 해변 방문, 에메랄드 빛 바다 감상. 근처 카페에서 휴식 즐기기',
         type: 'beach',
     },
     {
         id: 'day8',
-        day: 8,
-        content: '수',
+        day: '수',
+        date: 8,
         content:
             '서귀포 매일올레시장 방문, 신선한 해산물 구경. 올레길 일부 구간 산책',
         type: 'market',
     },
     {
         id: 'day9',
-        day: 9,
-        content: '목',
+        day: '목',
+        date: 9,
         content: '오전에 여유롭게 브런치, 오후 비행기로 집으로 귀환',
         type: 'plane',
     },
     {
         id: 'day10',
-        day: 10,
+        day: '금',
+        date: 10,
         content: '남은 휴가 정리 및 여행 추억 되새기기',
         type: 'home',
-    },
+    }, // 'day'를 '금'으로 수정
 ];
-
 function HomePage() {
     const [activeTab, setActiveTab] = useState<'schedule' | 'reservation'>(
         'schedule',

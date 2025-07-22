@@ -1,5 +1,3 @@
-// src/components/ActivityIcon.tsx
-import React from 'react';
 import styled from 'styled-components';
 
 interface ActivityIconProps {
