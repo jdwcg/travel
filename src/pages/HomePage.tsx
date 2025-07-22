@@ -2,30 +2,31 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import PageHeader from '../components/PageHeader'; // 상단 제목 컴포넌트
+import PageHeader from '../components/PageHeader';
+import ActivityIcon from '../components/ActivityIcon'; // 아이콘 컴포넌트 임포트
 
-// travelDates 데이터에 type (태그 정보) 추가
+// travelDates 데이터에 type (활동 유형) 추가
 const travelDates = [
     {
         id: 'day1',
         day: '수',
         date: 1,
         content: '휴가 시작! 여정의 설렘을 안고 떠나요!',
-        type: 'travel',
+        type: 'plane',
     },
     {
         id: 'day2',
         day: '목',
         date: 2,
         content: '새벽 비행기 탑승 및 제주 도착, 렌터카 수령 후 서귀포 이동',
-        type: 'travel',
+        type: 'car',
     },
     {
         id: 'day3',
         day: '금',
         date: 3,
         content: '카멜리아힐 방문, 동백꽃 구경 및 사진 촬영. 점심은 전복 요리!',
-        type: 'tour',
+        type: 'flower',
     },
     {
         id: 'day4',
@@ -53,8 +54,8 @@ const travelDates = [
     },
     {
         id: 'day7',
-        day: '화',
-        date: 7,
+        day: 7,
+        content: '화',
         content:
             '협재 해변 방문, 에메랄드 빛 바다 감상. 근처 카페에서 휴식 즐기기',
         type: 'beach',
@@ -62,6 +63,7 @@ const travelDates = [
     {
         id: 'day8',
         day: 8,
+        content: '수',
         content:
             '서귀포 매일올레시장 방문, 신선한 해산물 구경. 올레길 일부 구간 산책',
         type: 'market',
@@ -69,14 +71,15 @@ const travelDates = [
     {
         id: 'day9',
         day: 9,
+        content: '목',
         content: '오전에 여유롭게 브런치, 오후 비행기로 집으로 귀환',
-        type: 'travel',
+        type: 'plane',
     },
     {
         id: 'day10',
         day: 10,
         content: '남은 휴가 정리 및 여행 추억 되새기기',
-        type: 'wrapup',
+        type: 'home',
     },
 ];
 
@@ -119,10 +122,10 @@ function HomePage() {
                                 <StyledLink
                                     to={`/detail/${item.id}`}
                                     key={item.id}
-                                    itemType={item.type}
+                                    date={item.date}
                                 >
                                     {' '}
-                                    {/* itemType prop 전달 */}
+                                    {/* date prop 전달 */}
                                     <Tr>
                                         <TdDay>{item.day}</TdDay>
                                         <TdDate
@@ -134,8 +137,10 @@ function HomePage() {
                                             {item.date}
                                         </TdDate>
                                         <TdContent title={item.content}>
-                                            {item.content.length > 35
-                                                ? item.content.slice(0, 35) +
+                                            <ActivityIcon type={item.type} />{' '}
+                                            {/* 아이콘 추가 */}
+                                            {item.content.length > 30
+                                                ? item.content.slice(0, 30) +
                                                   '...'
                                                 : item.content}
                                         </TdContent>
@@ -166,19 +171,14 @@ function HomePage() {
 
 // === 스타일 컴포넌트 정의 ===
 
-// 배경색을 결정할 헬퍼 함수
-const getItemBackgroundColor = (itemType: string, theme: any) => {
-    switch (itemType) {
-        case 'camping':
-            return theme.colors.campingBackground || '#E6FAE6'; // 연한 초록
-        case 'hotel':
-            return theme.colors.hotelBackground || '#F0F8FF'; // 연한 하늘
-        case 'tour':
-            return theme.colors.tourBackground || '#FFFBE6'; // 연한 노랑
-        // ... 필요한 태그별 색상 추가
-        default:
-            return theme.colors.white; // 기본 배경색
+// 날짜 범위별 배경색을 결정하는 헬퍼 함수
+const getDateRangeBackgroundColor = (date: number, theme: any) => {
+    if (date >= 2 && date <= 8) {
+        return theme.colors.dateRangeColor1 || '#F0F8FF'; // 2~8일차 (연한 하늘색)
+    } else if (date === 9) {
+        return theme.colors.dateRangeColor2 || '#FFFBE6'; // 9일차 (연한 노란색)
     }
+    return theme.colors.white; // 그 외 (기본 흰색)
 };
 
 const Container = styled.div`
@@ -280,23 +280,21 @@ const ThContent = styled(Th)`
     text-align: left;
 `;
 
-const StyledLink = styled(Link)<{ itemType: string }>`
-     {
-        /* itemType prop을 받도록 타입 정의 */
-    }
+// date prop을 받도록 타입 정의
+const StyledLink = styled(Link)<{ date: number }>`
     display: table-row;
     text-decoration: none;
     color: inherit;
     border-bottom: 1px solid ${({ theme }) => theme.colors.borderGray};
-    background-color: ${({ itemType, theme }) =>
-        getItemBackgroundColor(itemType, theme)}; /* 배경색 동적 적용 */
-    transition: background-color 0.2s ease-in-out; /* 부드러운 전환 효과 */
+    background-color: ${({ date, theme }) =>
+        getDateRangeBackgroundColor(date, theme)}; /* 날짜별 배경색 동적 적용 */
+    transition: background-color 0.2s ease-in-out;
 
     &:last-child {
         border-bottom: none;
     }
     &:hover {
-        filter: brightness(0.95); /* 호버 시 약간 어둡게 */
+        filter: brightness(0.95);
     }
 `;
 
@@ -324,7 +322,6 @@ const TdDate = styled(Td)<{ isWeekend: boolean }>`
         isWeekend ? theme.colors.accentRed : theme.colors.textDark};
     background-color: ${({ isWeekend, theme }) =>
         isWeekend ? theme.colors.weekendBackground : 'transparent'};
-    /* 여기 TdDate의 배경색은 StyledLink의 배경색이 우선하기 때문에 직접 적용되지 않습니다. */
 `;
 
 const TdContent = styled(Td)`
@@ -332,6 +329,8 @@ const TdContent = styled(Td)`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex; /* 아이콘과 텍스트를 인라인으로 정렬하기 위해 flex 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
 `;
 
 export default HomePage;
