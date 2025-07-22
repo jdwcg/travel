@@ -1,8 +1,9 @@
+// src/pages/HomePage.tsx
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
-import ActivityIcon from '../components/ActivityIcon'; // 아이콘 컴포넌트 임포트
+import ActivityIcon from '../components/ActivityIcon';
 
 interface TravelDateItem {
     id: string;
@@ -12,7 +13,6 @@ interface TravelDateItem {
     type: string;
 }
 
-// 그리고 travelDates 배열 선언 부분을 이렇게 변경해주세요.
 const travelDates: TravelDateItem[] = [
     {
         id: 'day1',
@@ -88,8 +88,13 @@ const travelDates: TravelDateItem[] = [
         date: 10,
         content: '남은 휴가 정리 및 여행 추억 되새기기',
         type: 'home',
-    }, // 'day'를 '금'으로 수정
+    },
 ];
+
+// Grid 컬럼 정의 (재사용을 위해 상수화)
+// 15% (요일), 15% (일자), 70% (내용)
+const GRID_COLUMNS = '15% 15% 70%';
+
 function HomePage() {
     const [activeTab, setActiveTab] = useState<'schedule' | 'reservation'>(
         'schedule',
@@ -116,46 +121,44 @@ function HomePage() {
 
             {activeTab === 'schedule' ? (
                 <ScheduleSection>
-                    <ListTable>
-                        <thead>
-                            <tr>
-                                <ThDay>요일</ThDay>
-                                <ThDate>일자</ThDate>
-                                <ThContent>내용</ThContent>
-                            </tr>
-                        </thead>
-                        <tbody>
+                    <ListContainer>
+                        {' '}
+                        {/* Grid 레이아웃의 최상위 컨테이너 */}
+                        <ListHeader>
+                            {' '}
+                            {/* 헤더 로우 */}
+                            <ThItem>요일</ThItem>
+                            <ThItem>일자</ThItem>
+                            <ThContentItem>내용</ThContentItem>
+                        </ListHeader>
+                        <ListBody>
+                            {' '}
+                            {/* 실제 데이터 로우 컨테이너 (스크롤 가능성 고려) */}
                             {travelDates.map((item) => (
                                 <StyledLink
                                     to={`/detail/${item.id}`}
                                     key={item.id}
                                     date={item.date}
                                 >
-                                    {' '}
-                                    {/* date prop 전달 */}
-                                    <Tr>
-                                        <TdDay>{item.day}</TdDay>
-                                        <TdDate
-                                            isWeekend={
-                                                item.day === '토' ||
-                                                item.day === '일'
-                                            }
-                                        >
-                                            {item.date}
-                                        </TdDate>
-                                        <TdContent title={item.content}>
-                                            <ActivityIcon type={item.type} />{' '}
-                                            {/* 아이콘 추가 */}
-                                            {item.content.length > 30
-                                                ? item.content.slice(0, 30) +
-                                                  '...'
-                                                : item.content}
-                                        </TdContent>
-                                    </Tr>
+                                    <TdItem>{item.day}</TdItem>
+                                    <TdDateItem
+                                        isWeekend={
+                                            item.day === '토' ||
+                                            item.day === '일'
+                                        }
+                                    >
+                                        {item.date}
+                                    </TdDateItem>
+                                    <TdContentItem title={item.content}>
+                                        <ActivityIcon type={item.type} />
+                                        {item.content.length > 30
+                                            ? item.content.slice(0, 30) + '...'
+                                            : item.content}
+                                    </TdContentItem>
                                 </StyledLink>
                             ))}
-                        </tbody>
-                    </ListTable>
+                        </ListBody>
+                    </ListContainer>
                 </ScheduleSection>
             ) : (
                 <ReservationSection>
@@ -178,14 +181,13 @@ function HomePage() {
 
 // === 스타일 컴포넌트 정의 ===
 
-// 날짜 범위별 배경색을 결정하는 헬퍼 함수
 const getDateRangeBackgroundColor = (date: number, theme: any) => {
     if (date >= 2 && date <= 8) {
-        return theme.colors.dateRangeColor1 || '#F0F8FF'; // 2~8일차 (연한 하늘색)
+        return theme.colors.dateRangeColor1 || '#F0F8FF';
     } else if (date === 9) {
-        return theme.colors.dateRangeColor2 || '#FFFBE6'; // 9일차 (연한 노란색)
+        return theme.colors.dateRangeColor2 || '#FFFBE6';
     }
-    return theme.colors.white; // 그 외 (기본 흰색)
+    return theme.colors.white;
 };
 
 const Container = styled.div`
@@ -199,43 +201,33 @@ const Container = styled.div`
 
 const TabMenu = styled.div`
     display: flex;
-    /* TabMenu의 배경색은 전체 탭 영역의 배경색입니다. */
-    background-color: ${({ theme }) =>
-        theme.colors.lightGray}; /* 전체 탭바 배경 */
-    padding: 0; /* 내부 패딩은 각 버튼이 가짐 */
+    background-color: ${({ theme }) => theme.colors.lightGray};
+    padding: 0;
     margin-bottom: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 0 0 8px 8px; /* 하단만 둥글게 */
-    overflow: hidden; /* 내부 버튼이 넘치지 않도록 */
+    border-radius: 0 0 8px 8px;
+    overflow: hidden;
 `;
 
 const TabButton = styled.button<{ isActive: boolean }>`
     flex: 1;
-    /* ✨ 배경색 (활성/비활성) ✨ */
     background-color: ${({ theme, isActive }) =>
         isActive ? theme.colors.tabActiveBg : theme.colors.tabInactiveBg};
-    /* ✨ 글자색 (활성/비활성) ✨ */
     color: ${({ theme, isActive }) =>
         isActive ? theme.colors.tabActiveText : theme.colors.tabInactiveText};
-
     border: none;
     padding: 12px 0;
     font-size: ${({ theme }) => theme.fontSizes.medium};
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease-in-out; /* 부드러운 전환 효과 */
-
-    /* 선택된 탭 아래 강조선 (파란색) */
+    transition: all 0.3s ease-in-out;
     border-bottom: 3px solid
         ${({ theme, isActive }) =>
             isActive ? theme.colors.secondary : 'transparent'};
 
     &:hover {
-        /* 마우스 오버 시 색상 변화 */
         background-color: ${({ theme, isActive }) =>
-            isActive
-                ? theme.colors.tabActiveBg
-                : theme.colors.lightGray}; /* 비활성 시 살짝 더 어둡게 */
+            isActive ? theme.colors.tabActiveBg : theme.colors.lightGray};
         color: ${({ theme, isActive }) =>
             isActive
                 ? theme.colors.tabActiveText
@@ -244,15 +236,16 @@ const TabButton = styled.button<{ isActive: boolean }>`
 `;
 
 const ScheduleSection = styled.div`
-    background-color: ${({ theme }) => theme.colors.white};
-    margin: 16px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    border: 1px solid ${({ theme }) => theme.colors.lightGray};
+    /* 배경색, 그림자, 테두리 등은 ListContainer가 담당 */
+    margin: 16px; /* 컨테이너 외부 여백 */
 `;
 
 const ReservationSection = styled(ScheduleSection)`
+    background-color: ${({ theme }) =>
+        theme.colors.white}; /* 배경색 다시 추가 */
+    border-radius: 8px; /* 둥근 모서리 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 그림자 */
+    border: 1px solid ${({ theme }) => theme.colors.lightGray}; /* 테두리 */
     padding: 20px;
     text-align: center;
     & > p {
@@ -274,42 +267,54 @@ const ReservationItem = styled.div`
     }
 `;
 
-const ListTable = styled.table`
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 14px;
+// ✨ Grid 레이아웃을 위한 새로운 컨테이너들 ✨
+const ListContainer = styled.div`
+    display: flex; /* 헤더와 바디를 세로로 정렬 */
+    flex-direction: column;
+    background-color: ${({ theme }) =>
+        theme.colors.white}; /* 리스트 전체 배경색 */
+    border-radius: 8px;
+    overflow: hidden; /* 내부 요소가 넘치지 않도록 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid ${({ theme }) => theme.colors.lightGray};
 `;
 
-const Th = styled.th`
-    padding: 12px 8px;
-    text-align: center;
+const ListHeader = styled.div`
+    display: grid; /* 헤더 아이템들을 그리드로 정렬 */
+    grid-template-columns: ${GRID_COLUMNS}; /* 공통 컬럼 정의 사용 */
     background-color: ${({ theme }) => theme.colors.primaryLight};
     color: ${({ theme }) => theme.colors.textDark};
     font-weight: 700;
     border-bottom: 1px solid ${({ theme }) => theme.colors.primaryDark};
+`;
+
+const ListBody = styled.div`
+    /* overflow-y: auto; /* 스크롤이 필요하면 여기에 추가 */
+    /* flex: 1; /* 부모가 flex container일 때 남은 공간 차지 */
+`;
+
+// 헤더 아이템의 공통 스타일 (요일, 일자, 내용)
+const ThItem = styled.div`
+    padding: 12px 8px;
+    text-align: center;
     white-space: nowrap;
 `;
 
-const ThDay = styled(Th)`
-    width: 18%;
-`;
-const ThDate = styled(Th)`
-    width: 18%;
-`;
-const ThContent = styled(Th)`
-    width: 64%;
-    text-align: left;
+const ThContentItem = styled(ThItem)`
+    text-align: left; /* 내용은 좌측 정렬 */
 `;
 
-// date prop을 받도록 타입 정의
+// StyledLink가 이제 Grid Row 역할
 const StyledLink = styled(Link)<{ date: number }>`
-    display: table-row;
+    display: grid; /* 각 링크(리스트 항목)가 그리드 로우 */
+    grid-template-columns: ${GRID_COLUMNS}; /* 공통 컬럼 정의 사용 */
     text-decoration: none;
     color: inherit;
     border-bottom: 1px solid ${({ theme }) => theme.colors.borderGray};
     background-color: ${({ date, theme }) =>
-        getDateRangeBackgroundColor(date, theme)}; /* 날짜별 배경색 동적 적용 */
+        getDateRangeBackgroundColor(date, theme)};
     transition: background-color 0.2s ease-in-out;
+    padding: 0 8px; /* Link 내부 아이템들의 좌우 패딩을 조절 */
 
     &:last-child {
         border-bottom: none;
@@ -319,39 +324,31 @@ const StyledLink = styled(Link)<{ date: number }>`
     }
 `;
 
-const Tr = styled.div`
-    display: table-row;
-`;
-
-const Td = styled.td`
-    padding: 10px 8px;
-    vertical-align: middle;
+// Td는 div로 변경 (테이블 셀이 아닌 그리드 아이템 역할)
+const TdItem = styled.div`
+    padding: 10px 0; /* 좌우 패딩은 StyledLink에서 조절 */
+    display: flex; /* 내부 요소(텍스트, 아이콘) 정렬 위해 flex 사용 */
+    align-items: center; /* 세로 중앙 정렬 */
+    justify-content: center; /* 기본은 가로 중앙 정렬 */
     font-size: 13px;
     line-height: 1.4;
     color: ${({ theme }) => theme.colors.textBody};
 `;
 
-const TdDay = styled(Td)`
-    text-align: center;
-    font-weight: 500;
-`;
-
-const TdDate = styled(Td)<{ isWeekend: boolean }>`
-    text-align: center;
+// 일자 아이템
+const TdDateItem = styled(TdItem)<{ isWeekend: boolean }>`
     font-weight: 600;
     color: ${({ isWeekend, theme }) =>
         isWeekend ? theme.colors.accentRed : theme.colors.textDark};
-    background-color: ${({ isWeekend, theme }) =>
-        isWeekend ? theme.colors.weekendBackground : 'transparent'};
 `;
 
-const TdContent = styled(Td)`
-    text-align: left;
+// 내용 아이템
+const TdContentItem = styled(TdItem)`
+    justify-content: flex-start; /* 내용은 좌측 정렬 */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    display: flex; /* 아이콘과 텍스트를 인라인으로 정렬하기 위해 flex 사용 */
-    align-items: center; /* 세로 중앙 정렬 */
+    /* 아이콘이 포함되므로 이미 flex 처리되어 있음 */
 `;
 
 export default HomePage;
