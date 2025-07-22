@@ -199,33 +199,47 @@ const Container = styled.div`
 
 const TabMenu = styled.div`
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: ${({ theme }) => theme.colors.primary};
-    padding: 10px 0;
+    /* TabMenu의 배경색은 전체 탭 영역의 배경색입니다. */
+    background-color: ${({ theme }) =>
+        theme.colors.lightGray}; /* 전체 탭바 배경 */
+    padding: 0; /* 내부 패딩은 각 버튼이 가짐 */
     margin-bottom: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 0 0 8px 8px;
+    border-radius: 0 0 8px 8px; /* 하단만 둥글게 */
+    overflow: hidden; /* 내부 버튼이 넘치지 않도록 */
 `;
 
 const TabButton = styled.button<{ isActive: boolean }>`
     flex: 1;
-    background: none;
+    /* ✨ 배경색 (활성/비활성) ✨ */
+    background-color: ${({ theme, isActive }) =>
+        isActive ? theme.colors.tabActiveBg : theme.colors.tabInactiveBg};
+    /* ✨ 글자색 (활성/비활성) ✨ */
+    color: ${({ theme, isActive }) =>
+        isActive ? theme.colors.tabActiveText : theme.colors.tabInactiveText};
+
     border: none;
     padding: 12px 0;
     font-size: ${({ theme }) => theme.fontSizes.medium};
     font-weight: 600;
     cursor: pointer;
-    color: ${({ theme, isActive }) =>
-        isActive ? theme.colors.background : theme.colors.primaryDark};
+    transition: all 0.3s ease-in-out; /* 부드러운 전환 효과 */
+
+    /* 선택된 탭 아래 강조선 (파란색) */
     border-bottom: 3px solid
         ${({ theme, isActive }) =>
             isActive ? theme.colors.secondary : 'transparent'};
-    transition: all 0.2s ease-in-out;
 
     &:hover {
+        /* 마우스 오버 시 색상 변화 */
+        background-color: ${({ theme, isActive }) =>
+            isActive
+                ? theme.colors.tabActiveBg
+                : theme.colors.lightGray}; /* 비활성 시 살짝 더 어둡게 */
         color: ${({ theme, isActive }) =>
-            isActive ? theme.colors.background : theme.colors.primaryLight};
+            isActive
+                ? theme.colors.tabActiveText
+                : theme.colors.tabInactiveText};
     }
 `;
 

@@ -3,22 +3,27 @@
 
 export const theme = {
     colors: {
-        primary: '#4A90E2', // 예시 색상, 단의 기본 primary 색상으로 유지하세요
-        secondary: '#50E3C2', // 예시 색상, 단의 기본 secondary 색상으로 유지하세요
-        textDark: '#333333', // 텍스트 어두운 색상
-        textBody: '#666666', // 텍스트 일반 색상
+        // ... 기존 색상들 ...
+        primary: '#4A90E2',
+        secondary: '#50E3C2',
+        textDark: '#333333',
+        textBody: '#666666',
         background: '#F8F8F8', // 앱 전체 배경색
-        white: '#FFFFFF', // 흰색
-        lightGray: '#E0E0E0', // 연한 회색 (테두리, 그림자 등)
-        borderGray: '#EEEEEE', // 더 연한 회색 (구분선 등)
-        primaryLight: '#BBDEFB', // primary의 밝은 버전
-        primaryDark: '#2196F3', // primary의 어두운 버전
-        weekendBackground: '#FFF0F5', // 주말 배경색 (연한 분홍색) - 주말 TDDate에서 사용
-        accentRed: '#FF4136', // 강조 빨간색 (주말 텍스트 등) - 주말 TDDate에서 사용
+        white: '#FFFFFF', // 흰색 (활성 탭 배경색 등으로 사용)
+        lightGray: '#E0E0E0', // 연한 회색 (비활성 탭 배경색 등으로 사용)
+        borderGray: '#EEEEEE',
+        primaryLight: '#BBDEFB',
+        primaryDark: '#2196F3',
+        weekendBackground: '#FFF0F5',
+        accentRed: '#FF4136',
+        dateRangeColor1: '#F0F8FF',
+        dateRangeColor2: '#FFFBE6',
 
-        // 추가로 필요한 색상도 여기서 정의할 수 있어요
-        dateRangeColor1: '#F0F8FF', // 2~8일차 배경색 (연한 하늘색)
-        dateRangeColor2: '#FFFBE6', // 9일차 배경색 (연한 노란색)
+        // ✨ 탭 메뉴를 위한 새로운 색상 정의 ✨
+        tabActiveBg: '#FFFFFF', // 활성 탭 배경색 (흰색)
+        tabActiveText: '#4A90E2', // 활성 탭 글자색 (primary와 유사하게)
+        tabInactiveBg: '#EFEFEF', // 비활성 탭 배경색 (연한 회색)
+        tabInactiveText: '#999999', // 비활성 탭 글자색 (비활성 회색)
     },
     fontSizes: {
         small: '12px',
