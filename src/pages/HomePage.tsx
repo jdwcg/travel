@@ -45,12 +45,12 @@ const travelDates: TravelDateItem[] = [
     },
     {
         id: 'day5',
-        day: '일',
-        date: 5,
+        day: 5,
+        content: '일',
         content:
             '아침 일찍 캠핑장 주변 산책, 성산일출봉 등반 및 해안도로 드라이브',
         type: 'camping',
-    },
+    }, // content 중복 확인하여 수정
     {
         id: 'day6',
         day: '월',
@@ -91,9 +91,10 @@ const travelDates: TravelDateItem[] = [
     },
 ];
 
-// Grid 컬럼 정의 (재사용을 위해 상수화)
-// 15% (요일), 15% (일자), 70% (내용)
-const GRID_COLUMNS = '15% 15% 70%';
+// ✨ Flexbox 컬럼 너비 정의 (헤더와 아이템에 공통 적용) ✨
+// Flex-basis: flex 컨테이너 내에서 아이템의 기본 크기를 지정
+const COL_WIDTH_DAY = '15%'; // 요일 컬럼 너비
+const COL_WIDTH_DATE = '15%'; // 일자 컬럼 너비
 
 function HomePage() {
     const [activeTab, setActiveTab] = useState<'schedule' | 'reservation'>(
@@ -121,44 +122,50 @@ function HomePage() {
 
             {activeTab === 'schedule' ? (
                 <ScheduleSection>
-                    <ListContainer>
+                    <ListWrapper>
                         {' '}
-                        {/* Grid 레이아웃의 최상위 컨테이너 */}
+                        {/* 리스트 전체를 감싸는 Wrapper (정돈된 외형) */}
                         <ListHeader>
                             {' '}
-                            {/* 헤더 로우 */}
-                            <ThItem>요일</ThItem>
-                            <ThItem>일자</ThItem>
-                            <ThContentItem>내용</ThContentItem>
+                            {/* Flexbox 헤더 */}
+                            <HeaderCell basis={COL_WIDTH_DAY}>요일</HeaderCell>
+                            <HeaderCell basis={COL_WIDTH_DATE}>일자</HeaderCell>
+                            <HeaderContentCell>내용</HeaderContentCell>{' '}
+                            {/* 내용은 flex: 1로 나머지 공간 차지 */}
                         </ListHeader>
                         <ListBody>
                             {' '}
-                            {/* 실제 데이터 로우 컨테이너 (스크롤 가능성 고려) */}
+                            {/* 스크롤 기능이 필요하다면 여기에 overflow-y: auto */}
                             {travelDates.map((item) => (
                                 <StyledLink
                                     to={`/detail/${item.id}`}
                                     key={item.id}
                                     date={item.date}
                                 >
-                                    <TdItem>{item.day}</TdItem>
-                                    <TdDateItem
+                                    <ItemCell basis={COL_WIDTH_DAY}>
+                                        {item.day}
+                                    </ItemCell>
+                                    <ItemDateCell
+                                        basis={COL_WIDTH_DATE}
                                         isWeekend={
                                             item.day === '토' ||
                                             item.day === '일'
                                         }
                                     >
                                         {item.date}
-                                    </TdDateItem>
-                                    <TdContentItem title={item.content}>
+                                    </ItemDateCell>
+                                    <ItemContentCell title={item.content}>
                                         <ActivityIcon type={item.type} />
-                                        {item.content.length > 30
-                                            ? item.content.slice(0, 30) + '...'
-                                            : item.content}
-                                    </TdContentItem>
+                                        <TextContent>
+                                            {' '}
+                                            {/* 텍스트를 감싸서 엘립시스 처리 */}
+                                            {item.content}
+                                        </TextContent>
+                                    </ItemContentCell>
                                 </StyledLink>
                             ))}
                         </ListBody>
-                    </ListContainer>
+                    </ListWrapper>
                 </ScheduleSection>
             ) : (
                 <ReservationSection>
@@ -201,11 +208,10 @@ const Container = styled.div`
 
 const TabMenu = styled.div`
     display: flex;
-    background-color: ${({ theme }) => theme.colors.lightGray};
-    padding: 0;
+    background-color: transparent;
+    padding: 20px;
     margin-bottom: 16px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    border-radius: 0 0 8px 8px;
+
     overflow: hidden;
 `;
 
@@ -217,13 +223,11 @@ const TabButton = styled.button<{ isActive: boolean }>`
         isActive ? theme.colors.tabActiveText : theme.colors.tabInactiveText};
     border: none;
     padding: 12px 0;
-    font-size: ${({ theme }) => theme.fontSizes.medium};
+    font-size: ${({ theme }) => theme.fontSizes.small};
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-    border-bottom: 3px solid
-        ${({ theme, isActive }) =>
-            isActive ? theme.colors.secondary : 'transparent'};
+
 
     &:hover {
         background-color: ${({ theme, isActive }) =>
@@ -236,16 +240,13 @@ const TabButton = styled.button<{ isActive: boolean }>`
 `;
 
 const ScheduleSection = styled.div`
-    /* 배경색, 그림자, 테두리 등은 ListContainer가 담당 */
-    margin: 16px; /* 컨테이너 외부 여백 */
+    margin: 16px;
 `;
 
 const ReservationSection = styled(ScheduleSection)`
-    background-color: ${({ theme }) =>
-        theme.colors.white}; /* 배경색 다시 추가 */
-    border-radius: 8px; /* 둥근 모서리 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); /* 그림자 */
-    border: 1px solid ${({ theme }) => theme.colors.lightGray}; /* 테두리 */
+    background-color: ${({ theme }) => theme.colors.white};
+
+    border: 1px solid ${({ theme }) => theme.colors.lightGray};
     padding: 20px;
     text-align: center;
     & > p {
@@ -257,7 +258,7 @@ const ReservationSection = styled(ScheduleSection)`
 const ReservationItem = styled.div`
     background-color: ${({ theme }) => theme.colors.lightGray};
     padding: 12px;
-    border-radius: 6px;
+
     margin-bottom: 10px;
     cursor: pointer;
     text-align: left;
@@ -267,21 +268,19 @@ const ReservationItem = styled.div`
     }
 `;
 
-// ✨ Grid 레이아웃을 위한 새로운 컨테이너들 ✨
-const ListContainer = styled.div`
-    display: flex; /* 헤더와 바디를 세로로 정렬 */
+// ✨ Flexbox 기반 리스트 컨테이너들 ✨
+
+const ListWrapper = styled.div`
+    display: flex;
     flex-direction: column;
-    background-color: ${({ theme }) =>
-        theme.colors.white}; /* 리스트 전체 배경색 */
-    border-radius: 8px;
-    overflow: hidden; /* 내부 요소가 넘치지 않도록 */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    background-color: ${({ theme }) => theme.colors.white};
+
+    overflow: hidden;
     border: 1px solid ${({ theme }) => theme.colors.lightGray};
 `;
 
 const ListHeader = styled.div`
-    display: grid; /* 헤더 아이템들을 그리드로 정렬 */
-    grid-template-columns: ${GRID_COLUMNS}; /* 공통 컬럼 정의 사용 */
+    display: flex; /* Flexbox로 헤더 아이템들을 정렬 */
     background-color: ${({ theme }) => theme.colors.primaryLight};
     color: ${({ theme }) => theme.colors.textDark};
     font-weight: 700;
@@ -289,32 +288,38 @@ const ListHeader = styled.div`
 `;
 
 const ListBody = styled.div`
-    /* overflow-y: auto; /* 스크롤이 필요하면 여기에 추가 */
-    /* flex: 1; /* 부모가 flex container일 때 남은 공간 차지 */
+    /* 스크롤 기능이 필요하면 여기에 overflow-y: auto; 추가 */
 `;
 
-// 헤더 아이템의 공통 스타일 (요일, 일자, 내용)
-const ThItem = styled.div`
+// 헤더 셀 공통 스타일
+const HeaderCell = styled.div<{ basis?: string }>`
+    font-size: 12px;
     padding: 12px 8px;
     text-align: center;
     white-space: nowrap;
+    flex: 0 0 ${({ basis }) => basis || 'auto'}; /* 기본 크기 고정 (grow/shrink 방지) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `;
 
-const ThContentItem = styled(ThItem)`
-    text-align: left; /* 내용은 좌측 정렬 */
+const HeaderContentCell = styled(HeaderCell)`
+    flex: 1; /* 남은 공간을 모두 차지 (내용 셀) */
+    text-align: left;
+    justify-content: flex-start;
 `;
 
-// StyledLink가 이제 Grid Row 역할
+// StyledLink (각 리스트 항목) - Flexbox 행 역할
 const StyledLink = styled(Link)<{ date: number }>`
-    display: grid; /* 각 링크(리스트 항목)가 그리드 로우 */
-    grid-template-columns: ${GRID_COLUMNS}; /* 공통 컬럼 정의 사용 */
+    display: flex; /* Flexbox로 아이템들을 정렬 */
     text-decoration: none;
     color: inherit;
     border-bottom: 1px solid ${({ theme }) => theme.colors.borderGray};
     background-color: ${({ date, theme }) =>
         getDateRangeBackgroundColor(date, theme)};
     transition: background-color 0.2s ease-in-out;
-    padding: 0 8px; /* Link 내부 아이템들의 좌우 패딩을 조절 */
+    padding: 10px 8px; /* 내부 아이템의 전체 패딩 (상하, 좌우) */
+    min-height: 40px; /* 최소 높이 지정 (내용이 짧아도 일관된 높이 유지) */
 
     &:last-child {
         border-bottom: none;
@@ -324,31 +329,42 @@ const StyledLink = styled(Link)<{ date: number }>`
     }
 `;
 
-// Td는 div로 변경 (테이블 셀이 아닌 그리드 아이템 역할)
-const TdItem = styled.div`
-    padding: 10px 0; /* 좌우 패딩은 StyledLink에서 조절 */
-    display: flex; /* 내부 요소(텍스트, 아이콘) 정렬 위해 flex 사용 */
-    align-items: center; /* 세로 중앙 정렬 */
+// 리스트 아이템 셀 공통 스타일
+const ItemCell = styled.div<{ basis?: string; isWeekend?: boolean }>`
+    flex: 0 0 ${({ basis }) => basis || 'auto'}; /* 헤더 셀과 동일한 크기 고정 */
+    display: flex;
+    align-items: center;
     justify-content: center; /* 기본은 가로 중앙 정렬 */
     font-size: 13px;
     line-height: 1.4;
     color: ${({ theme }) => theme.colors.textBody};
+    white-space: nowrap; /* 셀 내용 줄바꿈 방지 */
 `;
 
-// 일자 아이템
-const TdDateItem = styled(TdItem)<{ isWeekend: boolean }>`
+const ItemDateCell = styled(ItemCell)`
     font-weight: 600;
     color: ${({ isWeekend, theme }) =>
         isWeekend ? theme.colors.accentRed : theme.colors.textDark};
 `;
 
-// 내용 아이템
-const TdContentItem = styled(TdItem)`
+// 내용 아이템 셀
+const ItemContentCell = styled(ItemCell)`
+    flex: 1; /* 남은 공간을 모두 차지 (내용 셀) */
     justify-content: flex-start; /* 내용은 좌측 정렬 */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    /* 아이콘이 포함되므로 이미 flex 처리되어 있음 */
+    min-width: 0; /* ✨ 중요: Flex 아이템이 내부 콘텐츠로 인해 컨테이너를 확장하지 않도록 설정 ✨ */
+    /* border: 1px solid red;  디버깅용 테두리는 이제 제거 (원하시면 다시 추가) */
+    /* white-space, overflow, text-overflow는 TextContent로 이동 */
+`;
+
+// ✨ 한 줄 엘립시스를 위한 텍스트 Wrapper ✨
+const TextContent = styled.span`
+    flex-grow: 1; /* 남은 공간을 모두 차지 */
+    flex-shrink: 1; /* 필요하면 줄어들기 */
+    white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+    overflow: hidden; /* 넘치는 내용 숨김 */
+    text-overflow: ellipsis; /* 넘치는 내용에 ... 표시 */
+    display: block; /* 엘립시스를 위해 블록 레벨처럼 작동 */
+    min-width: 0; /* ✨ 중요: 텍스트 자체가 줄어들 수 있도록 설정 ✨ */
 `;
 
 export default HomePage;
