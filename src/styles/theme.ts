@@ -4,7 +4,7 @@ export const theme = {
         secondary: '#50E3C2',
         textDark: '#333333',
         textBody: '#666666',
-        background: '#F8F8F8', // 앱 전체 배경색
+        background: '#fafafa', // 앱 전체 배경색
         white: '#FFFFFF', // 흰색 (활성 탭 배경색 등으로 사용)
         lightGray: '#E0E0E0', // 연한 회색 (비활성 탭 배경색 등으로 사용)
         borderGray: '#EEEEEE',

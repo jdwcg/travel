@@ -119,7 +119,21 @@ function HomePage() {
                     예약확인
                 </TabButton>
             </TabMenu>
+            <LodgingTagsContainer>
+                {/* 캠핑장 태그 */}
+                <LodgingTag type="camping">
+                    <span className="icon">🏕️</span>{' '}
+                    {/* 캠핑 아이콘 (이모지로 대체했어요!) */}
+                    캠핑장
+                </LodgingTag>
 
+                {/* 호텔 태그 */}
+                <LodgingTag type="hotel">
+                    <span className="icon">🏨</span>{' '}
+                    {/* 호텔 아이콘 (이모지로 대체했어요!) */}
+                    호텔
+                </LodgingTag>
+            </LodgingTagsContainer>
             {activeTab === 'schedule' ? (
                 <ScheduleSection>
                     <ListWrapper>
@@ -196,7 +210,42 @@ const getDateRangeBackgroundColor = (date: number, theme: any) => {
     }
     return theme.colors.white;
 };
+// 🏕️ 숙박 태그들을 담을 컨테이너 스타일이에요!
+const LodgingTagsContainer = styled.div`
+    display: flex; /* 태그들을 가로로 나란히 정렬해줘요 */
+    gap: 10px; /* 태그들 사이에 간격을 띄워줄 거예요 */
+    padding: 0 20px; /* 컨테이너 안쪽에 여백을 줄게요 */
+    background-color: #f8f8f8; /* 배경색으로 좀 더 예쁘게 보일까요? */
+    border-radius: 12px; /* 살짝 둥근 모서리도 추가해봐요! */
+`;
 
+// 🏷️ 개별 숙박 태그 스타일이에요! (캠핑장, 호텔 각각의 디자인)
+const LodgingTag = styled.span`
+    display: flex; /* 아이콘과 텍스트를 나란히 배치하기 위해 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 4px 12px; /* 안쪽 여백으로 태그 모양을 예쁘게 */
+    border-radius: 20px; /* 요청하신대로 둥글둥글한 모서리! */
+    font-size: 12px; /* 글자 크기도 적당히! */
+    font-weight: 600; /* 좀 더 또렷하게 보여요 */
+    color: #333; /* 글자색은 진한 회색으로 */
+    white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 */
+
+    // 🎨 여기부터 색상 마법 시작!
+    background-color: ${(props) => {
+        if (props.type === 'camping') {
+            return '#cbe1ee'; // 파스텔 미색 밝은 파랑
+        } else if (props.type === 'hotel') {
+            return '#f1eac7'; // 노랑 밝은
+        }
+        return '#eee'; // 기본값 (혹시 모를 상황을 대비해서)
+    }};
+
+    /* 아이콘에 대한 추가 스타일 (아이콘과 텍스트 사이 간격) */
+    & .icon {
+        margin-right: 6px;
+        font-size: 18px; /* 아이콘 크기를 텍스트보다 살짝 크게! */
+    }
+`;
 const Container = styled.div`
     max-width: 480px;
     margin: 0 auto;
@@ -210,7 +259,6 @@ const TabMenu = styled.div`
     display: flex;
     background-color: transparent;
     padding: 20px;
-    margin-bottom: 16px;
 
     overflow: hidden;
 `;
@@ -227,7 +275,6 @@ const TabButton = styled.button<{ isActive: boolean }>`
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease-in-out;
-
 
     &:hover {
         background-color: ${({ theme, isActive }) =>
