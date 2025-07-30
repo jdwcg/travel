@@ -212,38 +212,47 @@ const getDateRangeBackgroundColor = (date: number, theme: any) => {
 };
 // 🏕️ 숙박 태그들을 담을 컨테이너 스타일이에요!
 const LodgingTagsContainer = styled.div`
-    display: flex; /* 태그들을 가로로 나란히 정렬해줘요 */
-    gap: 10px; /* 태그들 사이에 간격을 띄워줄 거예요 */
-    padding: 0 20px; /* 컨테이너 안쪽에 여백을 줄게요 */
-    background-color: #f8f8f8; /* 배경색으로 좀 더 예쁘게 보일까요? */
-    border-radius: 12px; /* 살짝 둥근 모서리도 추가해봐요! */
+    display: flex;
+    gap: 10px;
+    padding: 0 20px;
+    background-color: #f8f8f8;
+    border-radius: 12px;
 `;
 
-// 🏷️ 개별 숙박 태그 스타일이에요! (캠핑장, 호텔 각각의 디자인)
-const LodgingTag = styled.span`
-    display: flex; /* 아이콘과 텍스트를 나란히 배치하기 위해 */
-    align-items: center; /* 세로 중앙 정렬 */
-    padding: 4px 12px; /* 안쪽 여백으로 태그 모양을 예쁘게 */
-    border-radius: 20px; /* 요청하신대로 둥글둥글한 모서리! */
-    font-size: 12px; /* 글자 크기도 적당히! */
-    font-weight: 600; /* 좀 더 또렷하게 보여요 */
-    color: #333; /* 글자색은 진한 회색으로 */
-    white-space: nowrap; /* 텍스트가 한 줄로 유지되도록 */
+// 🌟 여기에요! LodgingTag가 받을 props의 타입을 정의해주는 인터페이스예요.
+// 'type'이라는 prop이 있고, 그 값은 'camping'이거나 'hotel'만 가능하다고 알려주는 거죠!
+interface LodgingTagProps {
+    type: 'camping' | 'hotel';
+}
 
-    // 🎨 여기부터 색상 마법 시작!
+// 🏷️ 개별 숙박 태그 스타일이에요!
+// LodgingTagProps 인터페이스를 styled.span 뒤에 <LodgingTagProps> 이렇게 넣어주세요!
+const LodgingTag = styled.span<LodgingTagProps>`
+    display: flex;
+    align-items: center;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+
+    // 🎨 이제 props.type을 TypeScript가 잘 이해할 거예요!
     background-color: ${(props) => {
         if (props.type === 'camping') {
-            return '#cbe1ee'; // 파스텔 미색 밝은 파랑
+            return '#D1EEFF'; // 파스텔 미색 밝은 파랑
         } else if (props.type === 'hotel') {
-            return '#f1eac7'; // 노랑 밝은
+            return '#FFFACD'; // 노랑 밝은
         }
-        return '#eee'; // 기본값 (혹시 모를 상황을 대비해서)
+        // 여기는 위에 type을 'camping' | 'hotel'로 명확히 했기 때문에
+        // 사실상 이 라인에는 도달할 수 없지만, 혹시 모를 상황을 대비해 제거하지 않을게요!
+        return '#eee';
     }};
 
-    /* 아이콘에 대한 추가 스타일 (아이콘과 텍스트 사이 간격) */
+    /* 아이콘에 대한 추가 스타일 */
     & .icon {
         margin-right: 6px;
-        font-size: 18px; /* 아이콘 크기를 텍스트보다 살짝 크게! */
+        font-size: 18px;
     }
 `;
 const Container = styled.div`
@@ -259,7 +268,6 @@ const TabMenu = styled.div`
     display: flex;
     background-color: transparent;
     padding: 20px;
-
     overflow: hidden;
 `;
 
@@ -323,7 +331,6 @@ const ListWrapper = styled.div`
     background-color: ${({ theme }) => theme.colors.white};
 
     overflow: hidden;
-    border: 1px solid ${({ theme }) => theme.colors.lightGray};
 `;
 
 const ListHeader = styled.div`
@@ -331,7 +338,6 @@ const ListHeader = styled.div`
     background-color: ${({ theme }) => theme.colors.primaryLight};
     color: ${({ theme }) => theme.colors.textDark};
     font-weight: 700;
-    border-bottom: 1px solid ${({ theme }) => theme.colors.primaryDark};
 `;
 
 const ListBody = styled.div`
