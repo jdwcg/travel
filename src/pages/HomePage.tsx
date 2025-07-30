@@ -239,13 +239,15 @@ const LodgingTag = styled.span<LodgingTagProps>`
 
     // 🎨 이제 props.type을 TypeScript가 잘 이해할 거예요!
     background-color: ${(props) => {
+        // styled-components는 `theme` 객체를 `props`를 통해 전달해줍니다.
+        // 따라서 `props.theme.colors` 와 같이 접근해야 해요!
         if (props.type === 'camping') {
-            return '#D1EEFF'; // 파스텔 미색 밝은 파랑
+            return props.theme.colors.dateRangeColor1;
         } else if (props.type === 'hotel') {
-            return '#FFFACD'; // 노랑 밝은
+            return props.theme.colors.dateRangeColor2;
         }
-        // 여기는 위에 type을 'camping' | 'hotel'로 명확히 했기 때문에
-        // 사실상 이 라인에는 도달할 수 없지만, 혹시 모를 상황을 대비해 제거하지 않을게요!
+        // 모든 'type' 케이스가 정의되어 있으므로 여기는 실제로 도달하지 않아요.
+        // 하지만 만약을 대비해서 남겨둘게요.
         return '#eee';
     }};
 
