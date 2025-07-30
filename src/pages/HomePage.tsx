@@ -45,8 +45,8 @@ const travelDates: TravelDateItem[] = [
     },
     {
         id: 'day5',
-        day: 5,
-        content: '일',
+        day: '일',
+        date: 5,
         content:
             '아침 일찍 캠핑장 주변 산책, 성산일출봉 등반 및 해안도로 드라이브',
         type: 'camping',
