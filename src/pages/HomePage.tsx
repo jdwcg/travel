@@ -4,92 +4,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import ActivityIcon from '../components/ActivityIcon';
-
-interface TravelDateItem {
-    id: string;
-    day: string;
-    date: number;
-    content: string;
-    type: string;
-}
-
-const travelDates: TravelDateItem[] = [
-    {
-        id: 'day1',
-        day: '수',
-        date: 1,
-        content: '휴가 시작! 여정의 설렘을 안고 떠나요!',
-        type: 'plane',
-    },
-    {
-        id: 'day2',
-        day: '목',
-        date: 2,
-        content: '새벽 비행기 탑승 및 제주 도착, 렌터카 수령 후 서귀포 이동',
-        type: 'car',
-    },
-    {
-        id: 'day3',
-        day: '금',
-        date: 3,
-        content: '카멜리아힐 방문, 동백꽃 구경 및 사진 촬영. 점심은 전복 요리!',
-        type: 'flower',
-    },
-    {
-        id: 'day4',
-        day: '토',
-        date: 4,
-        content:
-            '우도 배편 예약 및 관광, 땅콩 아이스크림 맛보기, 캠핑장 체크인',
-        type: 'camping',
-    },
-    {
-        id: 'day5',
-        day: '일',
-        date: 5,
-        content:
-            '아침 일찍 캠핑장 주변 산책, 성산일출봉 등반 및 해안도로 드라이브',
-        type: 'camping',
-    }, // content 중복 확인하여 수정
-    {
-        id: 'day6',
-        day: '월',
-        date: 6,
-        content:
-            '제주 시내 자유시간, 동문시장 구경 및 기념품 구매, 흑돼지 저녁 식사',
-        type: 'city',
-    },
-    {
-        id: 'day7',
-        day: '화',
-        date: 7,
-        content:
-            '협재 해변 방문, 에메랄드 빛 바다 감상. 근처 카페에서 휴식 즐기기',
-        type: 'beach',
-    },
-    {
-        id: 'day8',
-        day: '수',
-        date: 8,
-        content:
-            '서귀포 매일올레시장 방문, 신선한 해산물 구경. 올레길 일부 구간 산책',
-        type: 'market',
-    },
-    {
-        id: 'day9',
-        day: '목',
-        date: 9,
-        content: '오전에 여유롭게 브런치, 오후 비행기로 집으로 귀환',
-        type: 'plane',
-    },
-    {
-        id: 'day10',
-        day: '금',
-        date: 10,
-        content: '남은 휴가 정리 및 여행 추억 되새기기',
-        type: 'home',
-    },
-];
+import { travelDates } from '../data/travelDates';
 
 // ✨ Flexbox 컬럼 너비 정의 (헤더와 아이템에 공통 적용) ✨
 // Flex-basis: flex 컨테이너 내에서 아이템의 기본 크기를 지정
@@ -148,8 +63,6 @@ function HomePage() {
                             {/* 내용은 flex: 1로 나머지 공간 차지 */}
                         </ListHeader>
                         <ListBody>
-                            {' '}
-                            {/* 스크롤 기능이 필요하다면 여기에 overflow-y: auto */}
                             {travelDates.map((item) => (
                                 <StyledLink
                                     to={`/detail/${item.id}`}
@@ -159,6 +72,7 @@ function HomePage() {
                                     <ItemCell basis={COL_WIDTH_DAY}>
                                         {item.day}
                                     </ItemCell>
+
                                     <ItemDateCell
                                         basis={COL_WIDTH_DATE}
                                         isWeekend={
@@ -168,11 +82,10 @@ function HomePage() {
                                     >
                                         {item.date}
                                     </ItemDateCell>
+
                                     <ItemContentCell title={item.content}>
                                         <ActivityIcon type={item.type} />
                                         <TextContent>
-                                            {' '}
-                                            {/* 텍스트를 감싸서 엘립시스 처리 */}
                                             {item.content}
                                         </TextContent>
                                     </ItemContentCell>
