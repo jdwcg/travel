@@ -10,9 +10,9 @@ const Header = styled.header`
 `;
 
 const Title = styled.h1`
-    font-size: 18px;
+    font-size: 15px;
     margin: 0;
-    color: #222;
+    color: green;
 `;
 
 export default function PageHeader({ title }: { title: string }) {

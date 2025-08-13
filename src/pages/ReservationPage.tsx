@@ -14,7 +14,7 @@ export default function ReservationPage() {
 
     return (
         <Container>
-            <PageHeader title="10월 제주도 가족 여행" />
+            <PageHeader title="🏝️ 10월 제주도 가족 여행 🏝️" />
             <Tabs />
 
             <ReservationSection>
