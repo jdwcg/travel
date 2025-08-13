@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
 export const COL_WIDTH_DAY = '56px';
-export const COL_WIDTH_DATE = '72px';
+export const COL_WIDTH_DATE = '42px';
 // src/components/CommonLayout.tsx (추가할 부분)
 export const ScheduleSection = styled.section`
     margin-top: 8px;
@@ -106,7 +106,7 @@ export const HeaderContentCell = styled.div`
 export const StyledLink = styled(Link)<{ date?: string }>`
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 4px;
     padding: 12px 16px;
     text-decoration: none;
     color: inherit;
@@ -150,7 +150,7 @@ export const ItemCell = styled.div<{ basis?: string }>`
 export const ItemDateCell = styled(ItemCell)<{ isWeekend?: boolean }>`
     font-weight: 600;
     color: ${({ isWeekend }) => (isWeekend ? '#d9534f' : '#333')};
-    justify-content: flex-start;
+    justify-content: center;
     padding-left: 4px;
 `;
 

@@ -31,7 +31,7 @@ function ActivityIcon({ type }: { type: TravelItem['type'] }) {
         activity: '🎒',
         food: '🍽️',
     };
-    return <IconSpan aria-hidden>{map[type] ?? '📌'}</IconSpan>;
+    return <IconSpan aria-hidden>{map[type] ?? ''}</IconSpan>;
 }
 
 export default function SchedulePage() {

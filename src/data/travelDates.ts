@@ -22,7 +22,7 @@ export const travelDates: TravelItem[] = [
         date: 2,
         lodging: 'hotel',
         content: '새벽 비행기 탑승 및 제주 도착, 렌터카 수령 후 서귀포 이동',
-        type: 'car',
+        type: 'hotel',
     },
     {
         id: 'day3',
@@ -30,7 +30,7 @@ export const travelDates: TravelItem[] = [
         date: 3,
         lodging: 'camping',
         content: '카멜리아힐 방문, 동백꽃 구경 및 사진 촬영. 점심은 전복 요리!',
-        type: 'flower',
+        type: 'camping',
     },
     {
         id: 'day4',
@@ -57,7 +57,7 @@ export const travelDates: TravelItem[] = [
         lodging: 'camping',
         content:
             '제주 시내 자유시간, 동문시장 구경 및 기념품 구매, 흑돼지 저녁 식사',
-        type: 'city',
+        type: 'camping',
     },
     {
         id: 'day7',
@@ -66,7 +66,7 @@ export const travelDates: TravelItem[] = [
         lodging: 'camping',
         content:
             '협재 해변 방문, 에메랄드 빛 바다 감상. 근처 카페에서 휴식 즐기기',
-        type: 'beach',
+        type: 'camping',
     },
     {
         id: 'day8',
@@ -75,7 +75,7 @@ export const travelDates: TravelItem[] = [
         lodging: 'hotel',
         content:
             '서귀포 매일올레시장 방문, 신선한 해산물 구경. 올레길 일부 구간 산책',
-        type: 'market',
+        type: 'hotel',
     },
     {
         id: 'day9',
@@ -83,7 +83,7 @@ export const travelDates: TravelItem[] = [
         date: 9,
         lodging: undefined,
         content: '오전에 여유롭게 브런치, 오후 비행기로 집으로 귀환',
-        type: 'plane',
+        type: undefined,
     },
     {
         id: 'day10',
@@ -91,6 +91,6 @@ export const travelDates: TravelItem[] = [
         date: 10,
         lodging: undefined,
         content: '남은 휴가 정리 및 여행 추억 되새기기',
-        type: 'home',
+        type: undefined,
     },
 ];
