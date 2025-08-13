@@ -121,6 +121,20 @@ export const StyledLink = styled(Link)<{ date?: string }>`
     &:last-child {
         border-bottom: none;
     }
+    &[data-lodging='hotel'] {
+        background: linear-gradient(
+            90deg,
+            rgba(255, 244, 230, 0.6),
+            rgba(255, 240, 240, 0.6)
+        );
+    }
+    &[data-lodging='camping'] {
+        background: linear-gradient(
+            90deg,
+            rgba(230, 247, 255, 0.6),
+            rgba(224, 255, 244, 0.6)
+        );
+    }
 `;
 
 export const ItemCell = styled.div<{ basis?: string }>`

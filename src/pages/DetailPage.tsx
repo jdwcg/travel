@@ -11,7 +11,7 @@ export default function DetailPage() {
             <PageHeader title="상세 보기" />
             <p>아이템 ID: {id}</p>
             <p>여기에 상세 내용 표시하세요.</p>
-            <Link to="/schedule">목록으로 돌아가기</Link>
+            <Link to="/schedule">홈으로 돌아가기</Link>
         </Container>
     );
 }

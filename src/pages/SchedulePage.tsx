@@ -61,6 +61,7 @@ export default function SchedulePage() {
                         <StyledLink
                             to={`/detail/${item.id}`}
                             key={item.id}
+                            data-lodging={item.lodging}
                             date={item.date}
                             aria-label={`일정 ${item.date} 상세보기`}
                         >
