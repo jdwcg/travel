@@ -2,7 +2,7 @@
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 
-export const COL_WIDTH_DAY = '56px';
+export const COL_WIDTH_DAY = '22px';
 export const COL_WIDTH_DATE = '42px';
 // src/components/CommonLayout.tsx (추가할 부분)
 export const ScheduleSection = styled.section`
@@ -69,9 +69,9 @@ export const ReservationItem = styled.div`
 
 /* List / Table 스타일 */
 export const ListWrapper = styled.div`
-    border-radius: 8px;
     overflow: hidden;
-    border: 1px solid #eee;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     background: #fff;
 `;
 
@@ -90,7 +90,7 @@ export const HeaderCell = styled.div<{ basis?: string }>`
     flex: 0 0 ${({ basis }) => basis || 'auto'};
     font-size: 13px;
     color: #666;
-    padding: 0 8px;
+    padding: 0 1px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -107,11 +107,11 @@ export const HeaderContentCell = styled.div`
 export const StyledLink = styled(Link)<{ date?: string }>`
     display: flex;
     align-items: center;
-    gap: 4px;
-    padding: 12px 16px;
+    gap: 0;
+    padding: 14px 16px;
     text-decoration: none;
     color: inherit;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solid #e1e1e1;
     transition: background 0.12s ease;
     background-color: ${({ date }) => (date ? 'transparent' : 'transparent')};
 
@@ -123,18 +123,10 @@ export const StyledLink = styled(Link)<{ date?: string }>`
         border-bottom: none;
     }
     &[data-lodging='hotel'] {
-        background: linear-gradient(
-            90deg,
-            rgba(255, 244, 230, 0.6),
-            rgba(255, 240, 240, 0.6)
-        );
+        background: linear-gradient(90deg, #fff4e699, #fff0f099);
     }
     &[data-lodging='camping'] {
-        background: linear-gradient(
-            90deg,
-            rgba(230, 247, 255, 0.6),
-            rgba(224, 255, 244, 0.6)
-        );
+        background: linear-gradient(90deg, #e6f7ff99, #e0fff499);
     }
 `;
 
@@ -167,12 +159,12 @@ export const TextContent = styled.span`
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-size: 14px;
+    font-size: 15px;
     min-width: 0;
 `;
 
 export const IconSpan = styled.span`
-    font-size: 18px;
+    font-size: 14px;
     line-height: 1;
     width: 22px;
     display: inline-flex;

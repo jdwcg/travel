@@ -51,9 +51,9 @@ export default function SchedulePage() {
 
             <ListWrapper>
                 <ListHeader>
-                    <HeaderCell basis={COL_WIDTH_DAY}>요일</HeaderCell>
-                    <HeaderCell basis={COL_WIDTH_DATE}>일자</HeaderCell>
-                    <HeaderContentCell>내용</HeaderContentCell>
+                    <HeaderCell basis={COL_WIDTH_DAY}>day</HeaderCell>
+                    <HeaderCell basis={COL_WIDTH_DATE}>date</HeaderCell>
+                    <HeaderContentCell>content</HeaderContentCell>
                 </ListHeader>
 
                 <ListBody>
