@@ -18,9 +18,7 @@ export default function ReservationPage() {
             <Tabs />
 
             <ReservationSection>
-                <p>예약확인 탭 내용입니다.</p>
-
-                {/* reservations 배열을 map 돌려서 실제 id로 링크 생성 */}
+                {/* <p>예약확인 탭 내용입니다.</p> */}
                 {reservations.map((r) => (
                     <Link
                         key={r.id}
@@ -29,7 +27,7 @@ export default function ReservationPage() {
                         state={{ from: location.pathname }}
                         aria-label={`${r.title} 상세보기`}
                     >
-                        <ReservationItem>{r.title} (보기)</ReservationItem>
+                        <ReservationItem>{r.title} </ReservationItem>
                     </Link>
                 ))}
             </ReservationSection>

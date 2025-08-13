@@ -10,8 +10,8 @@ const TabMenu = styled.nav`
 `;
 
 const TabButton = styled(NavLink)`
-    padding: 8px 12px;
-    border-radius: 8px;
+    padding: 12px 20px;
+    border-radius: 4px;
     text-decoration: none;
     color: #333;
     background: #f6f6f6;

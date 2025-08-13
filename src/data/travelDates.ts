@@ -13,7 +13,7 @@ export const travelDates: TravelItem[] = [
         day: '수',
         date: 1,
         lodging: undefined,
-        content: '휴가 시작! 여정의 설렘을 안고 떠나요!',
+        content: '여행준비 짐싸기',
         type: 'plane',
     },
     {
@@ -21,7 +21,7 @@ export const travelDates: TravelItem[] = [
         day: '목',
         date: 2,
         lodging: 'hotel',
-        content: '새벽 비행기 탑승 및 제주 도착, 렌터카 수령 후 서귀포 이동',
+        content: '제주도(호텔난타제주) 체크인',
         type: 'hotel',
     },
     {
@@ -29,7 +29,7 @@ export const travelDates: TravelItem[] = [
         day: '금',
         date: 3,
         lodging: 'camping',
-        content: '카멜리아힐 방문, 동백꽃 구경 및 사진 촬영. 점심은 전복 요리!',
+        content: '제주올레캠핑장 체크인(자리 12번)',
         type: 'camping',
     },
     {
@@ -37,8 +37,7 @@ export const travelDates: TravelItem[] = [
         day: '토',
         date: 4,
         lodging: 'camping',
-        content:
-            '우도 배편 예약 및 관광, 땅콩 아이스크림 맛보기, 캠핑장 체크인',
+        content: '제주도에서 할일 적기',
         type: 'camping',
     },
     {
@@ -46,8 +45,7 @@ export const travelDates: TravelItem[] = [
         day: '일',
         date: 5,
         lodging: 'camping',
-        content:
-            '아침 일찍 캠핑장 주변 산책, 성산일출봉 등반 및 해안도로 드라이브',
+        content: '제주도에서 할일 적기',
         type: 'camping',
     }, // content 중복 확인하여 수정
     {
@@ -55,8 +53,7 @@ export const travelDates: TravelItem[] = [
         day: '월',
         date: 6,
         lodging: 'camping',
-        content:
-            '제주 시내 자유시간, 동문시장 구경 및 기념품 구매, 흑돼지 저녁 식사',
+        content: '제주도에서 할일 적기',
         type: 'camping',
     },
     {
@@ -64,8 +61,7 @@ export const travelDates: TravelItem[] = [
         day: '화',
         date: 7,
         lodging: 'camping',
-        content:
-            '협재 해변 방문, 에메랄드 빛 바다 감상. 근처 카페에서 휴식 즐기기',
+        content: '제주도에서 할일 적기',
         type: 'camping',
     },
     {
@@ -73,8 +69,7 @@ export const travelDates: TravelItem[] = [
         day: '수',
         date: 8,
         lodging: 'hotel',
-        content:
-            '서귀포 매일올레시장 방문, 신선한 해산물 구경. 올레길 일부 구간 산책',
+        content: '캠핑장 체크아웃 / 완도(루미아 호텔) 체크인',
         type: 'hotel',
     },
     {
@@ -82,7 +77,7 @@ export const travelDates: TravelItem[] = [
         day: '목',
         date: 9,
         lodging: undefined,
-        content: '오전에 여유롭게 브런치, 오후 비행기로 집으로 귀환',
+        content: '집까지 안전운전',
         type: undefined,
     },
     {
@@ -90,7 +85,7 @@ export const travelDates: TravelItem[] = [
         day: '금',
         date: 10,
         lodging: undefined,
-        content: '남은 휴가 정리 및 여행 추억 되새기기',
+        content: '남은 휴가',
         type: undefined,
     },
 ];
