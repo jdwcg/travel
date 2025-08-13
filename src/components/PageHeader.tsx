@@ -12,15 +12,15 @@ const Header = styled.header`
     z-index: -1;
     height: 104px;
     width: 100%;
-    background-color: rgb(246, 246, 246);
+    background-color: #898989;
 `;
 
 const Title = styled.h1`
-    font-size: 14px;
-    font-weight: regular;
+    font-size: 15px;
+    font-weight: 400;
     margin: 0;
     letter-spacing: -0.5px;
-    color: #7f8e92;
+    color: white;
     position: fixed;
     top: 24px;
 `;

@@ -16,6 +16,11 @@ export const Container = styled.main`
     box-sizing: border-box;
 `;
 
+export const PageWrap = styled.div`
+    margin-top: 80px;
+    padding: 0;
+    box-sizing: border-box;
+`;
 /* Lodging tags */
 export const LodgingTagsContainer = styled.div`
     margin: 12px 0;

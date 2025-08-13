@@ -5,6 +5,8 @@ import styled from 'styled-components';
 const TabMenu = styled.nav`
     display: flex;
     margin: 22px 0 12px;
+    position: fixed;
+    width: calc(100% - 40px);
 `;
 
 const TabButton = styled(NavLink)`
@@ -13,7 +15,7 @@ const TabButton = styled(NavLink)`
     border-top-right-radius: 6px;
     text-decoration: none;
     color: #777;
-    background: #f6f6f6;
+    background: #e1e1e1;
     width: 100%;
     text-align: center;
     border-bottom: 1px solid #ddd;
