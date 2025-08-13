@@ -1,12 +1,12 @@
 // src/components/PageHeader.tsx
-import React from 'react';
 import styled from 'styled-components';
 
 const Header = styled.header`
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+    margin-top: 12px;
 `;
 
 const Title = styled.h1`

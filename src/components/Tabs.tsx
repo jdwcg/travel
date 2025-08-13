@@ -1,21 +1,21 @@
 // src/components/Tabs.tsx
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const TabMenu = styled.nav`
     display: flex;
-    gap: 8px;
     margin: 12px 0;
 `;
 
 const TabButton = styled(NavLink)`
     padding: 12px 20px;
-    border-radius: 4px;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
     text-decoration: none;
     color: #333;
     background: #f6f6f6;
-
+    width: 100%;
+    text-align: center;
     &.active {
         background: #222;
         color: #fff;

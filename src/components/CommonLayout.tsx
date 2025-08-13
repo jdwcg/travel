@@ -56,11 +56,12 @@ export const ReservationSection = styled.section`
 
 export const ReservationItem = styled.div`
     background-color: #f5f5f5;
-    padding: 12px;
-    margin-bottom: 10px;
+    padding: 16px;
+    margin-bottom: 16px;
     cursor: pointer;
     text-align: left;
     color: #333;
+    border-radius: 4px;
     &:hover {
         background-color: #ececec;
     }

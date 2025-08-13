@@ -1,5 +1,4 @@
 // src/pages/DetailPage.tsx
-import React from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import DOMPurify from 'dompurify';
 import PageHeader from '../components/PageHeader';
