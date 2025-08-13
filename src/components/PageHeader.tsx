@@ -1,22 +1,24 @@
+// src/components/PageHeader.tsx
+import React from 'react';
 import styled from 'styled-components';
 
-interface PageHeaderProps {
-    title: string;
-}
-
-const PageHeader: React.FC<PageHeaderProps> = ({ title }) => {
-    return <Header>{title}</Header>;
-};
-
-const Header = styled.h1`
-    width: 100%;
-    padding: 12px 0;
-    margin: 0;
-    text-align: center;
-    font-size: ${({ theme }) => theme.fontSizes.small};
-    font-weight: 500;
-    color: ${({ theme }) => theme.colors.background};
-    background-color: #444;
+const Header = styled.header`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 `;
 
-export default PageHeader;
+const Title = styled.h1`
+    font-size: 18px;
+    margin: 0;
+    color: #222;
+`;
+
+export default function PageHeader({ title }: { title: string }) {
+    return (
+        <Header>
+            <Title>{title}</Title>
+        </Header>
+    );
+}
