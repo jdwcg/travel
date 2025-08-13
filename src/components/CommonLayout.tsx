@@ -12,7 +12,7 @@ export const Container = styled.main`
     width: 100%;
     max-width: 980px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 40px 20px 20px;
     box-sizing: border-box;
 `;
 

@@ -37,7 +37,8 @@ function ActivityIcon({ type }: { type: TravelItem['type'] }) {
 export default function SchedulePage() {
     return (
         <Container>
-            <PageHeader title="🏝️ 10월 제주도 가족 여행 🏝️" />
+            <PageHeader title="10월 제주도 가족 여행" />
+
             <Tabs />
 
             <LodgingTagsContainer>
