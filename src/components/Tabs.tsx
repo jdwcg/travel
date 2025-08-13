@@ -15,7 +15,7 @@ const TabButton = styled(NavLink)`
     border-top-right-radius: 6px;
     text-decoration: none;
     color: #eee;
-    background: #333;
+    background: #444;
     width: 100%;
     text-align: center;
     &.active {

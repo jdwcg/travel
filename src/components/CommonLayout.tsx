@@ -75,15 +75,15 @@ export const ReservationItem = styled.div`
 /* List / Table 스타일 */
 export const ListWrapper = styled.div`
     overflow: hidden;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    /* border-top: 1px solid #ddd; */
+    border-bottom: 1px solid #eee;
     background: #fff;
 `;
 
 export const ListHeader = styled.div`
     display: flex;
     align-items: center;
-    background: #fafafa;
+    background: #eee;
     padding: 12px 16px;
     font-weight: 600;
     border-bottom: 1px solid #f1f1f1;
@@ -116,7 +116,7 @@ export const StyledLink = styled(Link)<{ date?: string }>`
     padding: 16px;
     text-decoration: none;
     color: inherit;
-    border-bottom: 1px solid #e1e1e1;
+    border-bottom: 3px solid #fff;
     transition: background 0.12s ease;
     background-color: ${({ date }) => (date ? 'transparent' : 'transparent')};
 
