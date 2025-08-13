@@ -84,6 +84,6 @@ export const travelDates: TravelItem[] = [
         date: '10',
         day: '목',
         type: 'activity',
-        content: '남은 휴가 정리 및 여행 추억 정리',
+        content: '남은 휴가',
     },
 ];
