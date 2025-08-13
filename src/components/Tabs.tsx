@@ -14,18 +14,13 @@ const TabButton = styled(NavLink)`
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     text-decoration: none;
-    color: #777;
-    background: #e1e1e1;
+    color: #333;
+    background: #f6f6f6;
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid #a1a1a1;
     &.active {
-        background: white;
-        color: #111;
-        border-top: 1px solid #a1a1a1;
-        border-left: 1px solid #a1a1a1;
-        border-right: 1px solid #a1a1a1;
-        border-bottom: 1px solid white;
+        background: #222;
+        color: #fff;
     }
 `;
 
