@@ -28,7 +28,7 @@ export const LodgingTag = styled.span<{ type: 'camping' | 'hotel' }>`
     gap: 2px;
     padding: 6px 10px;
     border-radius: 2px;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: bold;
     cursor: default;
     ${({ type }) =>
