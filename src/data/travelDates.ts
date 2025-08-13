@@ -1,4 +1,3 @@
-// src/data/travelDates.ts
 export type TravelItem = {
     id: string;
     date: string; // ISO: 'YYYY-MM-DD'
@@ -6,6 +5,14 @@ export type TravelItem = {
     type: 'camping' | 'hotel' | 'activity' | 'food';
     content: string;
     lodging?: 'camping' | 'hotel';
+    // 추가: 렌더링 타입 명시 (옵션)
+    contentType?: 'text' | 'html' | 'table';
+
+    // table 형식일 때 사용할 구조화된 데이터 (옵션)
+    contentData?: {
+        headers?: string[];
+        rows?: string[][];
+    };
 };
 
 export const travelDates: TravelItem[] = [
@@ -15,6 +22,33 @@ export const travelDates: TravelItem[] = [
         day: '화',
         type: 'activity',
         content: '여행 준비 및 짐 싸기',
+        contentType: 'table',
+        contentData: {
+            headers: ['구분', '장비'],
+            rows: [
+                ['주', '텐트'],
+                ['주', '전기장판'],
+                ['식', '알피쿨 냉장고'],
+                ['주', '침낭'],
+                ['주', '매트'],
+                ['주', '랜턴'],
+                ['식', '버너'],
+                ['식', '조리도구'],
+                ['식', '식기'],
+                ['식', '음료수'],
+                ['식', '간식'],
+                ['의', '약'],
+                ['의', '세면도구'],
+                ['의', '의류'],
+                ['의', '신발'],
+                ['의', '모자'],
+                ['의', '선글라스'],
+                ['의', '우산'],
+                ['', ''],
+                ['', ''],
+                ['', ''],
+            ],
+        },
     },
     {
         id: 'day2',
