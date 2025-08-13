@@ -18,18 +18,18 @@ export const Container = styled.main`
 
 /* Lodging tags */
 export const LodgingTagsContainer = styled.div`
-    margin: 12px 0 20px;
+    margin: 12px 0;
     display: flex;
+    justify-content: flex-start;
     gap: 8px;
 `;
 
 export const LodgingTag = styled.span<{ type: 'camping' | 'hotel' }>`
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+    gap: 2px;
     padding: 6px 10px;
-    border-radius: 999px;
-    font-size: 14px;
+    border-radius: 2px;
+    font-size: 10px;
+    font-weight: bold;
     cursor: default;
     ${({ type }) =>
         type === 'camping'
@@ -108,7 +108,7 @@ export const StyledLink = styled(Link)<{ date?: string }>`
     display: flex;
     align-items: center;
     gap: 0;
-    padding: 14px 16px;
+    padding: 16px;
     text-decoration: none;
     color: inherit;
     border-bottom: 1px solid #e1e1e1;
