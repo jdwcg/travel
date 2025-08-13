@@ -19,7 +19,7 @@ export const reservations: ReservationItem[] = [
     {
         id: 'r1',
         date: '2025-10-02',
-        title: '배표 예약(완도 → 제주)',
+        title: '🛳️ 배표 예약(완도 → 제주)',
         contentType: 'table',
         contentData: {
             headers: ['항목', '내역'],
@@ -37,7 +37,7 @@ export const reservations: ReservationItem[] = [
     {
         id: 'r3',
         date: '202510-02',
-        title: '호텔 예약(난타제주)',
+        title: '🏨 호텔 예약(난타제주)',
         contentType: 'table',
         contentData: {
             headers: ['항목', '내역'],
@@ -55,14 +55,14 @@ export const reservations: ReservationItem[] = [
     {
         id: 'r4',
         date: '2025-10-03',
-        title: '캠핑장 예약(제주올레캠핑장)',
+        title: '🏕️ 캠핑장 예약(제주올레캠핑장)',
         contentType: 'text',
         content: '제주올레캠핑장(자리 12번)',
     },
     {
         id: 'r2',
         date: '2025-10-08',
-        title: '배표 예약(제주 → 완도)',
+        title: '🛳️ 배표 예약(제주 → 완도)',
         contentType: 'table',
         contentData: {
             headers: ['항목', '내역'],
@@ -79,7 +79,7 @@ export const reservations: ReservationItem[] = [
     {
         id: 'r5',
         date: '2025-10-08',
-        title: '호텔 예약(루미아호텔) ',
+        title: '🏨 호텔 예약(루미아호텔)',
         contentType: 'table',
         contentData: {
             headers: ['항목', '내역'],
