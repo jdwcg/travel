@@ -10,9 +10,9 @@ const Header = styled.header`
     top: 0;
     left: 0;
     z-index: -1;
-    height: 103px;
+    height: 102px;
     width: 100%;
-    background-color: #898989;
+    background-color: #333;
 `;
 
 const Title = styled.h1`
@@ -20,7 +20,7 @@ const Title = styled.h1`
     font-weight: 400;
     margin: 0;
     letter-spacing: -0.5px;
-    color: white;
+    color: #777;
     position: fixed;
     top: 24px;
 `;
