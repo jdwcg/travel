@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 const TabMenu = styled.nav`
     display: flex;
-    margin: 12px 0;
+    margin: 22px 0 12px;
 `;
 
 const TabButton = styled(NavLink)`
@@ -12,17 +12,17 @@ const TabButton = styled(NavLink)`
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     text-decoration: none;
-    color: #b7b7b7;
+    color: #777;
     background: #f6f6f6;
     width: 100%;
     text-align: center;
-    border-bottom: 1px solid #b7b7b7;
+    border-bottom: 1px solid #ddd;
     &.active {
         background: white;
-        color: #333;
-        border-top: 1px solid #b7b7b7;
-        border-left: 1px solid #b7b7b7;
-        border-right: 1px solid #b7b7b7;
+        color: #111;
+        border-top: 1px solid #ddd;
+        border-left: 1px solid #ddd;
+        border-right: 1px solid #ddd;
         border-bottom: 1px solid white;
     }
 `;
