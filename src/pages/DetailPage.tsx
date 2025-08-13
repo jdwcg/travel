@@ -157,46 +157,138 @@ export default function DetailPage() {
                 <PageHeader title="상세 보기" />
                 <p>해당 항목을 찾을 수 없습니다.</p>
                 <p>
-                    <Link to={backTo}>목록으로 돌아가기</Link>
+                    <Link to={backTo}>닫기</Link>
                 </p>
             </Container>
         );
     }
 
     return (
-        <Container>
-            <PageHeader title="상세 보기" />
-            <h3>
-                {item.kind === 'reservation'
-                    ? `${'title' in item ? item.title : '예약'}`
-                    : ('title' in item
-                          ? item.title
-                          : `여행 ${(item as TravelItem).date}`) + ' 일째'}
-            </h3>
+        <>
+            {/* 상단 고정 바 */}
+            <TopBar role="banner" aria-hidden={false}>
+                <TopBarInner>
+                    <BarTitle>상세 보기</BarTitle>
 
-            <div>
-                <RenderContent item={item} />
-            </div>
+                    {/* 우측 상단 닫기 (기존 backTo와 동일한 동작) */}
+                    <CloseLink to={backTo} aria-label="닫기">
+                        ×
+                    </CloseLink>
+                </TopBarInner>
+            </TopBar>
 
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <p
-                    style={{
-                        marginTop: 24,
-                        border: '1px solid #ddd',
-                        textAlign: 'center',
-                        borderRadius: 4,
-                        display: 'inline-block',
-                    }}
-                >
-                    <Link
-                        to={backTo}
-                        aria-label="목록보기"
-                        style={{ padding: 12, display: 'block' }}
-                    >
-                        목록보기
-                    </Link>
-                </p>
-            </div>
-        </Container>
+            {/* 페이지 본문: TopBar 높이만큼 패딩 주기 */}
+            <PageContent>
+                <Container>
+                    <h3>
+                        {item.kind === 'reservation'
+                            ? `${'title' in item ? item.title : '예약'}`
+                            : ('title' in item
+                                  ? item.title
+                                  : `여행 ${(item as TravelItem).date}`) +
+                              ' 일째'}
+                    </h3>
+
+                    <div>
+                        <RenderContent item={item} />
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <p
+                            style={{
+                                marginTop: 24,
+                                border: '1px solid #ddd',
+                                textAlign: 'center',
+                                borderRadius: 4,
+                                display: 'inline-block',
+                            }}
+                        >
+                            <Link
+                                to={backTo}
+                                aria-label="닫기"
+                                style={{ padding: 12, display: 'block' }}
+                            >
+                                닫기
+                            </Link>
+                        </p>
+                    </div>
+                </Container>
+            </PageContent>
+        </>
     );
 }
+import styled from 'styled-components';
+
+const TOPBAR_HEIGHT = '64px';
+
+const TopBar = styled.header`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: ${TOPBAR_HEIGHT};
+    background: #ffffff;
+    border-bottom: 1px solid #ececec;
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+`;
+
+const TopBarInner = styled.div`
+    width: 100%;
+    max-width: 980px; /* Container와 동일하게 맞춤 */
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* CloseLink 절대 위치 기준 */
+    box-sizing: border-box;
+`;
+
+const BarTitle = styled.h2`
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+`;
+
+const CloseLink = styled(Link)`
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: #333;
+    background: #fff;
+    border: 1px solid #eee;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+        background: #f6f6f6;
+    }
+    /* &:focus {
+        outline: 2px solid #5b9dff;
+        outline-offset: 2px;
+    } */
+`;
+
+/* 실제 본문 영역: TopBar 높이만큼 여유를 둠 */
+const PageContent = styled.main`
+    padding-top: ${TOPBAR_HEIGHT};
+    /* 필요 시 전체 너비 제한은 내부 Container에서 처리 */
+    /* min-height: calc(100vh - ${TOPBAR_HEIGHT}); */
+    min-height: 100vh;
+    background: #fcfcfc; /* 필요하면 제거 */
+`;
