@@ -285,7 +285,7 @@ const FullCalendarGlobalStyle = createGlobalStyle`
 .fc .fc-daygrid-day .fc-bg-event.lodging-hotel,
 .fc .fc-event.lodging-hotel,
 .fc .fc-daygrid-day-frame .lodging-hotel {
-    background: linear-gradient(90deg,#fff4e6,#fff0f0) !important;
+    background: pink !important;
     border-color: #7a3b0026 !important;
     color: #7a3b00 !important;
 }
@@ -294,7 +294,7 @@ const FullCalendarGlobalStyle = createGlobalStyle`
 .fc .fc-daygrid-day .fc-bg-event.lodging-camping,
 .fc .fc-event.lodging-camping,
 .fc .fc-daygrid-day-frame .lodging-camping {
-    background: linear-gradient(90deg,#e6f7ff,#e0fff4) !important;
+    background: skyblue !important;
     border-color: #005b8a26 !important;
     color: #005b8a !important;
 }
