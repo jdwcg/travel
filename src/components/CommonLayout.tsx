@@ -20,6 +20,8 @@ export const PageWrap = styled.div`
     margin-top: 80px;
     padding: 0;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
 `;
 /* Lodging tags */
 export const LodgingTagsContainer = styled.div`

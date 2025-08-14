@@ -6,6 +6,7 @@ const TabMenu = styled.nav`
     display: flex;
     margin: 22px 0 12px;
     position: fixed;
+    z-index: 3;
     width: calc(100% - 40px);
 `;
 
