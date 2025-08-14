@@ -12,9 +12,9 @@ import { travelDates } from '../data/travelDates'; // 경로 확인
 const backTo = '/SchedulePage';
 
 /* ========== 유틸 & 안전한 날짜 처리 ========== */
-function pad2(n: number) {
-    return String(n).padStart(2, '0');
-}
+// function pad2(n: number) {
+//     return String(n).padStart(2, '0');
+// }
 
 // function normalizeToISO(
 //     dateRaw: string,
