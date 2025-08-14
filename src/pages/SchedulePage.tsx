@@ -98,7 +98,7 @@ export default function SchedulePage() {
     );
 }
 export const CalendarView = styled.div`
-    margin-top: 40px;
+    margin-top: 20px;
     padding: 0;
     box-sizing: border-box;
     position: relative;

@@ -59,7 +59,7 @@ export default function CalendarPage() {
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <p
                     style={{
-                        marginTop: 24,
+                        marginTop: 0,
                         border: '1px solid #ddd',
                         textAlign: 'center',
                         borderRadius: 4,
