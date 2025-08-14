@@ -91,7 +91,7 @@ export default function SchedulePage() {
 
             <CalendarView>
                 <CalendarLink to="/calendar" aria-label="달력으로 이동">
-                    달력 보기
+                    2025년 10월 달력 보기
                 </CalendarLink>
             </CalendarView>
         </Container>
