@@ -1,5 +1,5 @@
 // src/pages/CalendarPage.tsx
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -16,23 +16,23 @@ function pad2(n: number) {
     return String(n).padStart(2, '0');
 }
 
-function normalizeToISO(
-    dateRaw: string,
-    defaultYear = '2025',
-    defaultMonth = '10',
-) {
-    if (!dateRaw) return null;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) return dateRaw;
-    if (/^\d{1,2}$/.test(dateRaw)) {
-        const day = pad2(Number(dateRaw));
-        return `${defaultYear}-${defaultMonth}-${day}`;
-    }
-    const parsed = new Date(dateRaw);
-    if (!isNaN(parsed.getTime())) {
-        return parsed.toISOString().slice(0, 10);
-    }
-    return null;
-}
+// function normalizeToISO(
+//     dateRaw: string,
+//     defaultYear = '2025',
+//     defaultMonth = '10',
+// ) {
+//     if (!dateRaw) return null;
+//     if (/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) return dateRaw;
+//     if (/^\d{1,2}$/.test(dateRaw)) {
+//         const day = pad2(Number(dateRaw)); // 이제 pad2를 찾을 수 있어요! ✨
+//         return `${defaultYear}-${defaultMonth}-${day}`;
+//     }
+//     const parsed = new Date(dateRaw);
+//     if (!isNaN(parsed.getTime())) {
+//         return parsed.toISOString().slice(0, 10);
+//     }
+//     return null;
+// }
 
 function addOneDayIso(isoDate: string) {
     const [y, m, d] = isoDate.split('-').map(Number);
@@ -306,36 +306,36 @@ const FullCalendarGlobalStyle = createGlobalStyle`
 
 /* 1) 이벤트 내부 영역(패딩/높이/정렬) 키우기 */
 .fc .fc-daygrid-event .fc-event-main-frame {
-  padding: 3px 2px !important;       /* 세로/가로 여백 증가 */
-  min-height: 34px !important;         /* 이벤트 블록 최소 높이 확보 */
-  display: flex !important;
-  align-items: center !important;      /* 중앙 정렬로 텍스트가 가운데 위치 */
+padding: 3px 2px !important;       /* 세로/가로 여백 증가 */
+min-height: 34px !important;         /* 이벤트 블록 최소 높이 확보 */
+display: flex !important;
+align-items: center !important;      /* 중앙 정렬로 텍스트가 가운데 위치 */
 }
 
 /* 2) 이벤트 제목 폰트 키우기 / 줄바꿈 허용 */
 .fc .fc-daygrid-event .fc-event-title {
-  font-size: 14px !important;
-  font-weight: 600 !important;
-  line-height: 1.1 !important;
+font-size: 14px !important;
+font-weight: 600 !important;
+line-height: 1.1 !important;
 }
 
 /* 3) harness(래퍼) 마진/간격 보정(원하면) */
 .fc .fc-daygrid-event-harness {
-  margin-top: 4px !important;
-  margin-bottom: 4px !important;
+margin-top: 4px !important;
+margin-bottom: 4px !important;
 }
 
 /* 4) (선택) 내부에 태그/아이콘을 넣었다면 그 태그의 스타일 */
 .fc .fc-event .fc-event-tag,
 .fc .fc-event .lodging-hotel,
 .fc .fc-event .lodging-camping {
-  padding: 6px 10px !important;
-  font-size: 13px !important;
-  border-radius: 6px !important;
-  margin-right: 8px !important;
-  display: inline-flex !important;
-  align-items: center !important;
-  justify-content: center !important;
+padding: 6px 10px !important;
+font-size: 13px !important;
+border-radius: 6px !important;
+margin-right: 8px !important;
+display: inline-flex !important;
+align-items: center !important;
+justify-content: center !important;
 }
 .fc .fc-daygrid-body-natural .fc-daygrid-day-events {
     margin-bottom: 0;
