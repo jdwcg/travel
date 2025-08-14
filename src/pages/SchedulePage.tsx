@@ -22,7 +22,8 @@ import {
     PageWrap,
 } from '../components/CommonLayout';
 import { travelDates } from '../data/travelDates';
-
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 type TravelItem = (typeof travelDates)[number];
 
 function ActivityIcon({ type }: { type: TravelItem['type'] }) {
@@ -87,6 +88,39 @@ export default function SchedulePage() {
                     </ListBody>
                 </ListWrapper>
             </PageWrap>
+
+            <CalendarView>
+                <CalendarLink to="/calendar" aria-label="달력으로 이동">
+                    달력 보기
+                </CalendarLink>
+            </CalendarView>
         </Container>
     );
 }
+export const CalendarView = styled.div`
+    margin-top: 40px;
+    padding: 0;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #eee;
+    border-radius: 4px;
+`;
+export const CalendarLink = styled(Link)`
+    padding: 14px 20px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    width: 100%;
+    text-align: center;
+    &:hover {
+        background: #fbfbff;
+    }
+`;
