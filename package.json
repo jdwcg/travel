@@ -10,6 +10,10 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@fullcalendar/daygrid": "^6.1.19",
+        "@fullcalendar/google-calendar": "^6.1.19",
+        "@fullcalendar/interaction": "^6.1.19",
+        "@fullcalendar/react": "^6.1.19",
         "dompurify": "^3.2.6",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",

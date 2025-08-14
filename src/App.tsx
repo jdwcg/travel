@@ -7,7 +7,7 @@ import {
     useNavigationType,
 } from 'react-router-dom';
 import HomePage from './pages/HomePage';
-import Calendar from './pages/Calendar';
+import CalendarPage from './pages/CalendarPage';
 import SchedulePage from './pages/SchedulePage';
 import ReservationPage from './pages/ReservationPage';
 import DetailPage from './pages/DetailPage';
@@ -58,7 +58,7 @@ export default function AppRoutes() {
             <Routes>
                 {/* 루트는 HomePage가 받아 재빨리 /schedule로 리다이렉트합니다 */}
                 <Route path="/" element={<HomePage />} />
-                <Route path="/calendar" element={<Calendar />} />
+                <Route path="/calendar" element={<CalendarPage />} />
 
                 {/* 탭 분리된 페이지 */}
                 <Route path="/schedule" element={<SchedulePage />} />
