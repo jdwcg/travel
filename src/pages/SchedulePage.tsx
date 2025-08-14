@@ -91,7 +91,7 @@ export default function SchedulePage() {
 
             <CalendarView>
                 <CalendarLink to="/calendar" aria-label="달력으로 이동">
-                    2025년 10월 달력 보기
+                    📅 2025년 10월 달력
                 </CalendarLink>
             </CalendarView>
         </Container>
@@ -106,7 +106,6 @@ export const CalendarView = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid #eee;
     border-radius: 4px;
 `;
 export const CalendarLink = styled(Link)`
@@ -116,11 +115,13 @@ export const CalendarLink = styled(Link)`
     z-index: 1;
     display: flex;
     justify-content: center;
-    border: 1px solid #eee;
     border-radius: 4px;
-    width: 100%;
+    /* width: 100%; */
+    font-size: 14px;
     text-align: center;
+    background-color: #dfe6ee;
+    border-radius: 12px;
     &:hover {
-        background: #fbfbff;
+        background: #d2d9e0;
     }
 `;
