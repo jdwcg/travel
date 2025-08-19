@@ -7,7 +7,9 @@ const TabMenu = styled.nav`
     margin: 22px 0 12px;
     position: fixed;
     z-index: 3;
-    width: calc(100% - 40px);
+    max-width: 100%;
+    left: 50%;
+    translate: -50%;
 `;
 
 const TabButton = styled(NavLink)`
@@ -17,7 +19,7 @@ const TabButton = styled(NavLink)`
     text-decoration: none;
     color: #eee;
     background: #444;
-    width: 100%;
+    width: 120px;
     text-align: center;
     &.active {
         background: #fefefe;
