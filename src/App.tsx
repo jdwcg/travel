@@ -10,8 +10,8 @@ import HomePage from './pages/HomePage';
 import CalendarPage from './pages/CalendarPage';
 import SchedulePage from './pages/SchedulePage';
 import ReservationPage from './pages/ReservationPage';
-import DetailPage from './pages/DetailPage';
-
+// import DetailPage from './pages/DetailPage';
+import ItemDetailPage from './pages/DetailPage';
 /**
  * ScrollManager
  * - location.key (또는 pathname)을 키로 스크롤 위치를 저장/복원함
@@ -59,19 +59,25 @@ export default function AppRoutes() {
                 {/* 루트는 HomePage가 받아 재빨리 /schedule로 리다이렉트합니다 */}
                 <Route path="/" element={<HomePage />} />
                 <Route path="/calendar" element={<CalendarPage />} />
-
                 {/* 탭 분리된 페이지 */}
                 <Route path="/schedule" element={<SchedulePage />} />
                 <Route path="/reservation" element={<ReservationPage />} />
-
                 {/* 기존에 주신 라우트들 (요청 기준으로 그대로 포함) */}
-                <Route path="/detail/:id" element={<DetailPage />} />
+                <Route
+                    path="/detail/:itemType/:id"
+                    element={<ItemDetailPage />}
+                />
                 <Route
                     path="/reservation-detail/:id"
-                    element={<DetailPage />}
-                />
+                    element={<ItemDetailPage />}
+                />{' '}
+                // 이전 라우트 (삭제하거나 redirect 처리)
+                <Route
+                    path="/travel-detail/:id"
+                    element={<ItemDetailPage />}
+                />{' '}
+                // 이전 라우트 (삭제하거나 redirect 처리)
                 <Route path="/full-schedule" element={<HomePage />} />
-
                 {/* 찾을 수 없는 경로는 일정 페이지로 보내기 */}
                 <Route path="*" element={<Navigate to="/schedule" replace />} />
             </Routes>

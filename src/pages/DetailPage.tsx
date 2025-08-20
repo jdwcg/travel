@@ -1,156 +1,151 @@
-// src/pages/DetailPage.tsx
-import { useParams, useLocation, Link } from 'react-router-dom';
-import DOMPurify from 'dompurify';
+// src/pages/ItemDetailPage.tsx (가칭. 상세 페이지 컴포넌트 파일 이름에 맞춰주세요!)
+import { useEffect, useState } from 'react'; // ✨ 추가
+import axios from 'axios'; // ✨ 추가
+import { useParams, Link, useLocation } from 'react-router-dom'; // useParams 추가!
 import PageHeader from '../components/PageHeader';
-import { Container } from '../components/CommonLayout';
-import { travelDates } from '../data/travelDates';
-import type { TravelItem } from '../data/travelDates';
-import { reservations } from '../data/reservations';
-import type { ReservationItem } from '../data/reservations';
+import {
+    Container,
+    // PageContent,
+    // TopBar,
+    // TopBarInner,
+    // BarTitle,
+    // CloseLink,
+} from '../components/CommonLayout';
 
-// Item 타입: travel 또는 reservation 에 kind를 붙여 사용
-type Item = (TravelItem | ReservationItem) & { kind: 'travel' | 'reservation' };
-
-/**
- * 테이블 형태 데이터를 렌더링하는 컴포넌트
- * headers: string[], rows: string[][]
- */
-function TableFromData({
-    headers,
-    rows,
-}: {
-    headers: string[];
-    rows: string[][];
-}) {
-    return (
-        <div style={{ overflowX: 'auto' }}>
-            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
-                <caption
-                    style={{
-                        textAlign: 'left',
-                        fontWeight: 600,
-                        marginBottom: 8,
-                    }}
-                    aria-hidden
-                >
-                    상세 정보
-                </caption>
-                <thead>
-                    <tr>
-                        {headers.map((h, i) => (
-                            <th
-                                key={i}
-                                style={{
-                                    border: '1px solid #e6e6e6',
-                                    padding: '8px 10px',
-                                    background: '#fafafa',
-                                    textAlign: 'left',
-                                }}
-                                scope="col"
-                            >
-                                {h}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row, rIndex) => (
-                        <tr key={rIndex}>
-                            {row.map((cell, cIndex) => (
-                                <td
-                                    key={cIndex}
-                                    style={{
-                                        border: '1px solid #eee',
-                                        padding: '8px 10px',
-                                        verticalAlign: 'top',
-                                    }}
-                                >
-                                    {cell}
-                                </td>
-                            ))}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    );
+// 💡 백엔드에서 오는 데이터 구조와 맞춰야 해요!
+interface BaseItem {
+    id: string;
+    _id?: string;
+    __v?: number;
+    // ... 공통적으로 포함될 필드들 (title, content, contentType, contentData 등)
 }
 
-/**
- * item.contentType === 'table' 이면 구조화된 데이터로 렌더
- * item.content 가 HTML 문자열이면 DOMPurify로 정화 후 dangerouslySetInnerHTML 로 렌더
- * 그 외에는 일반 텍스트로 렌더
- */
-function RenderContent({ item }: { item: Item }) {
-    // 구조화된 테이블 데이터가 있으면 우선 처리
-    // (contentType과 contentData 필드 구조는 데이터 설계에 맞춰 조정하세요)
-    if ((item as any).contentType === 'table' && (item as any).contentData) {
-        const cd = (item as any).contentData;
-        const headers: string[] = cd.headers ?? [];
-        const rows: string[][] = cd.rows ?? [];
-        return <TableFromData headers={headers} rows={rows} />;
-    }
-
-    // content가 HTML 문자열인지 간단 검사
-    const content = (item as any).content;
-    if (typeof content === 'string') {
-        // <table> 태그나 다른 HTML 태그가 포함되어 있는지 체크
-        const looksLikeHtml = /<\/?[a-z][\s\S]*>/i.test(content);
-        if (looksLikeHtml) {
-            // DOMPurify로 정화 후 삽입 (XSS 방지)
-            const clean = DOMPurify.sanitize(content, {
-                USE_PROFILES: { html: true },
-            });
-            return <div dangerouslySetInnerHTML={{ __html: clean }} />;
-        }
-
-        // 기본 텍스트
-        return <p>{content}</p>;
-    }
-
-    // 그 외 (예: content가 객체 등) -> JSON 형태로 표시 (디버그용)
-    return (
-        <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-            {JSON.stringify(content, null, 2)}
-        </pre>
-    );
+interface ReservationItemType extends BaseItem {
+    // Reservation specific fields
+    date: string;
+    title: string;
+    contentType?: 'text' | 'html' | 'table';
+    content?: string;
+    contentData?: {
+        headers?: string[];
+        rows?: string[][];
+    };
+    kind: 'reservation'; // 어떤 타입의 아이템인지 구별하기 위한 필드
 }
 
-export default function DetailPage() {
-    const params = useParams<{ id: string }>();
-    const location = useLocation();
-    const id = params.id ?? '';
+interface TravelItemType extends BaseItem {
+    // Travel specific fields
+    date: string; // ISO: 'YYYY-MM-DD' 또는 '1', '2'
+    day: string;
+    type: 'camping' | 'hotel' | 'activity' | 'food';
+    content: string;
+    lodging?: 'camping' | 'hotel';
+    contentType?: 'text' | 'html' | 'table';
+    contentData?: {
+        headers?: string[];
+        rows?: string[][];
+    };
+    kind: 'travel'; // 어떤 타입의 아이템인지 구별하기 위한 필드
+}
 
-    // 먼저 두 데이터에서 찾음 (예약 먼저 검사하는 것이 UX상 자연스러우면 우선)
-    const foundReservation = reservations.find(
-        (r) => String(r.id) === String(id),
-    );
-    const foundTravel = travelDates.find((t) => String(t.id) === String(id));
+type Item = ReservationItemType | TravelItemType;
 
-    // 간단한 경로 판단: /reservation-detail/* 이면 reservation으로 간주
-    const pathname = location.pathname || '';
-    const source = pathname.startsWith('/reservation-detail')
-        ? 'reservation'
-        : 'travel';
+export default function ItemDetailPage() {
+    // 컴포넌트 이름은 실제 파일 이름에 맞춰주세요!
+    // ✨ useParams로 URL에서 id 가져오기!
+    // 라우트가 /reservation-detail/:id 라면 { id } = useParams<{ id: string }>();
+    // 라우트가 /detail/:type/:id 라면 { type, id } = useParams<{ type: string; id: string }>();
+    const { itemType, id } = useParams<{ itemType: string; id: string }>();
 
-    // item 구성: source 기준으로 found 결과를 사용(없으면 다른 쪽도 검사)
-    let item: Item | undefined;
-    if (source === 'reservation') {
-        if (foundReservation)
-            item = { ...foundReservation, kind: 'reservation' };
-        else if (foundTravel) item = { ...foundTravel, kind: 'travel' };
-    } else {
-        if (foundTravel) item = { ...foundTravel, kind: 'travel' };
-        else if (foundReservation)
-            item = { ...foundReservation, kind: 'reservation' };
-    }
+    // 💡 초기 데이터를 불러올 state
+    const [item, setItem] = useState<Item | undefined>(undefined);
+    // 💡 로딩 상태 관리
+    const [loading, setLoading] = useState(true);
+    // 💡 에러 상태 관리
+    const [error, setError] = useState<string | null>(null);
 
-    // 뒤로갈 경로 결정 (state로 전달된 from이 있으면 우선 사용)
+    const location = useLocation(); // 뒤로갈 경로 결정을 위한 useLocation
+
+    // 💡 데이터 불러오는 useEffect
+    useEffect(() => {
+        const fetchItemDetail = async () => {
+            if (!id || !itemType) {
+                // ID 또는 ItemType이 없으면 에러 처리
+                setError('아이템 정보가 불완전합니다.');
+                setLoading(false);
+                return;
+            }
+
+            setLoading(true);
+            setError(null);
+
+            // ✨ 여기가 핵심! itemType 에 따라 백엔드의 정확한 API 경로를 매핑합니다. ✨
+            let endpointType = '';
+            if (itemType === 'reservation') {
+                endpointType = 'reservations'; // 'reservation' 타입일 때는 'reservations' 컬렉션 사용
+            } else if (itemType === 'travel') {
+                endpointType = 'traveldates'; // 'travel' 타입일 때는 'traveldates' 컬렉션 사용!
+            } else {
+                setError('알 수 없는 아이템 유형입니다.'); // 'reservation'이나 'travel'이 아닌 다른 값이 넘어오면
+                setLoading(false);
+                return;
+            }
+
+            const apiUrl = `http://localhost:5000/api/${endpointType}/${id}`;
+
+            try {
+                const response = await axios.get<Item>(apiUrl);
+                // 가져온 데이터에 kind 필드를 추가하여 타입 구별 (기존 코드 로직 유지)
+                setItem({ ...response.data, kind: itemType } as Item); // itemType을 그대로 kind로 사용
+            } catch (err) {
+                console.error(
+                    '아이템 상세 정보를 불러오는 데 실패했습니다:',
+                    err,
+                );
+                if (axios.isAxiosError(err) && err.response?.status === 404) {
+                    setError('해당 아이템을 찾을 수 없습니다.');
+                } else {
+                    setError('상세 정보를 불러오는 데 실패했습니다.');
+                }
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchItemDetail();
+    }, [id, itemType]);
+
+    // ... (뒤로갈 경로 결정 로직은 기존 코드 유지)
     const backFromState = (location.state as any)?.from as string | undefined;
+    // 💡 item.kind를 사용하여 동적으로 backTo 결정
     const backTo =
         backFromState ??
-        (item?.kind === 'reservation' ? '/reservation' : '/schedule');
+        (itemType === 'reservation' ? '/reservation' : '/schedule');
 
+    // 💡 로딩 중일 때 UI
+    if (loading) {
+        return (
+            <Container>
+                <PageHeader title="상세 보기" />
+                <p>데이터를 불러오는 중입니다...</p>
+            </Container>
+        );
+    }
+
+    // 💡 에러 발생 시 UI
+    if (error) {
+        return (
+            <Container>
+                <PageHeader title="상세 보기" />
+                <p style={{ color: 'red' }}>{error}</p>
+                <p>
+                    <Link to={backTo}>닫기</Link>
+                </p>
+            </Container>
+        );
+    }
+
+    // 💡 데이터가 없거나 로딩, 에러가 아닐 때 (즉, 404 Not Found)
     if (!item) {
         return (
             <Container>
@@ -163,14 +158,15 @@ export default function DetailPage() {
         );
     }
 
+    // 💡 RenderContent 컴포넌트는 해당 컴포넌트에 정의되어 있을 것으로 가정
+    // RenderContent 컴포넌트 내부에서 item의 kind에 따라 다르게 렌더링되도록 구현 필요
+
     return (
         <>
             {/* 상단 고정 바 */}
             <TopBar role="banner" aria-hidden={false}>
                 <TopBarInner>
                     <BarTitle>상세 보기</BarTitle>
-
-                    {/* 우측 상단 닫기 (기존 backTo와 동일한 동작) */}
                     <CloseLink to={backTo} aria-label="닫기">
                         ×
                     </CloseLink>
@@ -183,13 +179,16 @@ export default function DetailPage() {
                     <h3>
                         {item.kind === 'reservation'
                             ? `${'title' in item ? item.title : '예약'}`
-                            : ('title' in item
-                                  ? item.title
-                                  : `여행 ${(item as TravelItem).date}`) +
+                            : ('title' in item && 'date' in item // travel item 일 경우 date 속성 접근 대비
+                                  ? item.title || `여행 ${item.date}`
+                                  : `여행 ${'date' in item ? item.date : ''}`) +
                               ' 일째'}
                     </h3>
 
                     <div>
+                        {/* 💡 RenderContent 컴포넌트는 그대로 사용하되, item을 prop으로 넘김 */}
+                        {/* 💡 RenderContent 컴포넌트가 item.kind에 따라 다른 데이터를 표시하도록 구현되어야 합니다. */}
+                        {/* 예를 들어, RenderContent 안에서 item.kind === 'reservation' 일 때 ReservationItemType을, 'travel'일 때 TravelItemType을 예상 */}
                         <RenderContent item={item} />
                     </div>
 
@@ -216,6 +215,84 @@ export default function DetailPage() {
             </PageContent>
         </>
     );
+}
+
+// 💡 RenderContent 컴포넌트 예시 (만약 기존 코드가 없었다면)
+// 이 컴포넌트가 Item 타입을 받아서 ReservationItemType이나 TravelItemType에 따라 다른 내용을 렌더링하도록 정의해야 합니다.
+interface RenderContentProps {
+    item: Item;
+}
+function RenderContent({ item }: RenderContentProps) {
+    if (item.kind === 'reservation') {
+        // 예약 아이템 상세 렌더링
+        const reservation = item as ReservationItemType;
+        return (
+            <div>
+                <h4>{reservation.title}</h4>
+                <p>날짜: {reservation.date}</p>
+                {reservation.content && <p>내용: {reservation.content}</p>}
+                {reservation.contentType === 'table' &&
+                    reservation.contentData && (
+                        <table>
+                            <thead>
+                                <tr>
+                                    {reservation.contentData.headers?.map(
+                                        (header, i) => (
+                                            <th key={i}>{header}</th>
+                                        ),
+                                    )}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {reservation.contentData.rows?.map((row, i) => (
+                                    <tr key={i}>
+                                        {row.map((cell, j) => (
+                                            <td key={j}>{cell}</td>
+                                        ))}
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
+            </div>
+        );
+    } else if (item.kind === 'travel') {
+        // 여행 아이템 상세 렌더링
+        const travel = item as TravelItemType;
+        return (
+            <div>
+                <h4>{travel.content}</h4>
+                <p>
+                    날짜: {travel.date}일 ({travel.day})
+                </p>
+                <p>유형: {travel.type}</p>
+                {travel.lodging && <p>숙소: {travel.lodging}</p>}
+                {travel.contentType === 'table' && travel.contentData && (
+                    <table>
+                        <thead>
+                            <tr>
+                                {travel.contentData.headers?.map(
+                                    (header, i) => (
+                                        <th key={i}>{header}</th>
+                                    ),
+                                )}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {travel.contentData.rows?.map((row, i) => (
+                                <tr key={i}>
+                                    {row.map((cell, j) => (
+                                        <td key={j}>{cell}</td>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                )}
+            </div>
+        );
+    }
+    return <p>알 수 없는 아이템 유형입니다.</p>;
 }
 import styled from 'styled-components';
 
