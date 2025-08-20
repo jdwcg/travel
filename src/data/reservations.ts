@@ -1,15 +1,9 @@
-// src/data/reservations.ts
 export type ReservationItem = {
     id: string;
     date: string;
     title: string;
-    // 기존 content는 유지(단순 텍스트 또는 HTML 문자열)
     content?: string;
-
-    // 추가: 렌더링 타입 명시 (옵션)
     contentType?: 'text' | 'html' | 'table';
-
-    // table 형식일 때 사용할 구조화된 데이터 (옵션)
     contentData?: {
         headers?: string[];
         rows?: string[][];
