@@ -58,9 +58,10 @@ function ActivityIcon({ type }: { type: TravelItemType['type'] }) {
 }
 
 // ✨ 일정 추가 폼 컴포넌트 ✨
+// ✨ 일정 추가 폼 컴포넌트 ✨ (수정)
 interface AddTravelFormProps {
-    onAdd: (newTravel: TravelItemType) => void; // 추가 성공 시 호출될 콜백 함수
-    onCancel: () => void; // 취소 버튼 클릭 시 호출될 콜백 함수
+    onAdd: (newTravel: TravelItemType) => void;
+    onCancel: () => void;
 }
 
 function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
@@ -72,22 +73,29 @@ function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
     >({
         id: '',
         date: '',
-        day: '월', // 기본값 설정
-        type: 'activity', // 기본값 설정
+        day: '월',
+        type: 'activity',
         content: '',
     });
+    const [adminPassword, setAdminPassword] = useState(''); // ✨ 비밀번호 상태 추가!
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     ) => {
         const { name, value } = e.target;
+        console.log(`Input changed - Name: ${name}, Value: ${value}`); // ✨ 이 로그로 각 필드에 입력된 값 확인
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault(); // 기본 폼 제출 동작 방지
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        // ✨ 비밀번호 변경 핸들러
+        setAdminPassword(e.target.value);
+    };
 
-        // 필수 필드 확인 (백엔드 스키마의 required: true 에 맞춰서)
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        console.log('--- 전송될 formData ---', formData);
+        console.log('--- 전송될 adminPassword ---', adminPassword);
         if (
             !formData.id ||
             !formData.date ||
@@ -99,17 +107,28 @@ function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
             return;
         }
 
+        if (!adminPassword) {
+            // ✨ 비밀번호가 비어있으면
+            alert('일정을 추가하려면 관리자 비밀번호를 입력해야 합니다.');
+            return;
+        }
+
         try {
-            // 백엔드 POST API 호출
+            // 백엔드 POST API 호출 시 헤더에 비밀번호 추가!
             const response = await axios.post<TravelItemType>(
                 'http://localhost:5000/api/traveldates',
                 formData,
+                {
+                    headers: {
+                        'X-Admin-Password': adminPassword, // ✨ 중요! 백엔드에서 설정한 헤더 이름과 동일해야 함
+                    },
+                },
             );
 
             alert('일정이 성공적으로 추가되었습니다!');
-            onAdd(response.data); // 부모 컴포넌트에 새로 추가된 데이터 전달
+            onAdd(response.data);
 
-            // 폼 초기화
+            // 폼 초기화 및 비밀번호도 초기화
             setFormData({
                 id: '',
                 date: '',
@@ -117,14 +136,19 @@ function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
                 type: 'activity',
                 content: '',
             });
+            setAdminPassword(''); // ✨ 비밀번호 필드도 초기화
         } catch (error) {
             console.error('여행 일정 추가 실패:', error);
-            // AxiosError 타입 가드 (Axios 오류 처리)
             if (axios.isAxiosError(error) && error.response) {
-                alert(
-                    '일정 추가에 실패했습니다: ' +
-                        (error.response.data.message || error.message),
-                );
+                // 백엔드에서 보낸 401 Unauthorized 에러 메시지 확인
+                if (error.response.status === 401) {
+                    alert('일정 추가 실패: 잘못된 관리자 비밀번호입니다.');
+                } else {
+                    alert(
+                        '일정 추가에 실패했습니다: ' +
+                            (error.response.data.message || error.message),
+                    );
+                }
             } else {
                 alert('일정 추가에 실패했습니다.');
             }
@@ -133,10 +157,9 @@ function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
 
     return (
         <FormContainer>
-            {' '}
-            {/* ✨ 새로운 스타일드 컴포넌트: FormContainer */}
             <h4 style={{ marginTop: 0 }}>새 여행 일정 추가</h4>
             <form onSubmit={handleSubmit}>
+                {/* 기존 폼 필드들 */}
                 <FormField>
                     <Label htmlFor="id">ID:</Label>
                     <Input
@@ -206,6 +229,21 @@ function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
                         required
                     />
                 </FormField>
+
+                {/* ✨ 비밀번호 입력 필드 추가! ✨ */}
+                <FormField>
+                    <Label htmlFor="adminPassword">비밀번호:</Label>
+                    <Input
+                        type="password"
+                        id="adminPassword"
+                        name="adminPassword"
+                        value={adminPassword}
+                        onChange={handlePasswordChange}
+                        placeholder="관리자 비밀번호"
+                        required
+                    />
+                </FormField>
+
                 <ButtonContainer>
                     <Button type="submit" primary>
                         추가하기
@@ -218,7 +256,6 @@ function AddTravelForm({ onAdd, onCancel }: AddTravelFormProps) {
         </FormContainer>
     );
 }
-
 export default function SchedulePage() {
     const [travelDates, setTravelDates] = useState<TravelItemType[]>([]);
     const [loading, setLoading] = useState(true);
