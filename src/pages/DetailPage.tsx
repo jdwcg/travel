@@ -233,7 +233,7 @@ function RenderContent({ item }: RenderContentProps) {
                 {reservation.content && <p>내용: {reservation.content}</p>}
                 {reservation.contentType === 'table' &&
                     reservation.contentData && (
-                        <table>
+                        <Table>
                             <thead>
                                 <tr>
                                     {reservation.contentData.headers?.map(
@@ -252,7 +252,7 @@ function RenderContent({ item }: RenderContentProps) {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+                        </Table>
                     )}
             </div>
         );
@@ -262,13 +262,17 @@ function RenderContent({ item }: RenderContentProps) {
         return (
             <div>
                 <h4>{travel.content}</h4>
-                <p>
+                {/* <p>
                     날짜: {travel.date}일 ({travel.day})
                 </p>
-                <p>유형: {travel.type}</p>
+                <p>유형: {travel.type}</p> */}
                 {travel.lodging && <p>숙소: {travel.lodging}</p>}
                 {travel.contentType === 'table' && travel.contentData && (
-                    <table>
+                    <Table>
+                        <colgroup>
+                            <col style={{ width: '20%' }} />
+                            <col style={{ width: '30%' }} />
+                        </colgroup>
                         <thead>
                             <tr>
                                 {travel.contentData.headers?.map(
@@ -287,7 +291,7 @@ function RenderContent({ item }: RenderContentProps) {
                                 </tr>
                             ))}
                         </tbody>
-                    </table>
+                    </Table>
                 )}
             </div>
         );
@@ -368,4 +372,15 @@ const PageContent = styled.main`
     /* min-height: calc(100vh - ${TOPBAR_HEIGHT}); */
     min-height: 100vh;
     background: #fcfcfc; /* 필요하면 제거 */
+`;
+const Table = styled.table`
+    width: 100%;
+    td,
+    th {
+        padding: 10px 8px;
+        border-top: 1px solid #ddd;
+    }
+    tr:last-child {
+        border-bottom: 1px solid #ddd;
+    }
 `;

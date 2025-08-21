@@ -14,6 +14,9 @@ export const Container = styled.main`
     margin: 0 auto;
     padding: 40px 20px 20px;
     box-sizing: border-box;
+    h3 {
+        font-size: 14px;
+    }
 `;
 
 export const PageWrap = styled.div`
