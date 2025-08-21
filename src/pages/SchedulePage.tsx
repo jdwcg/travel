@@ -360,24 +360,24 @@ export default function SchedulePage() {
             <PageHeader title="10월 제주 여행" />
             <Tabs />
             <PageWrap>
-                <div className="inner">
-                    <LodgingTagsContainer>
-                        <LodgingTag type="camping">🏕️ 캠핑장</LodgingTag>
-                        <LodgingTag type="hotel">🏨 호텔</LodgingTag>
-                    </LodgingTagsContainer>
-                    {/* ✨ "일정추가" 버튼과 폼을 조건부 렌더링 */}
-                    {!showAddForm && ( // 폼이 안 보일 때만 버튼 표시
+                {/* ✨ "일정추가" 버튼과 폼을 조건부 렌더링 */}
+                {!showAddForm && (
+                    <div className="inner">
+                        <LodgingTagsContainer>
+                            <LodgingTag type="camping">🏕️ 캠핑장</LodgingTag>
+                            <LodgingTag type="hotel">🏨 호텔</LodgingTag>
+                        </LodgingTagsContainer>
                         <BaseBtnWrap>
                             <button onClick={handleAddClick}>일정추가</button>
                         </BaseBtnWrap>
-                    )}
-                </div>
+                    </div>
+                )}
                 {showAddForm && (
                     <AddTravelForm
                         onAdd={handleAddSuccess}
                         onCancel={handleCancelAdd}
                     />
-                )}{' '}
+                )}
                 {/* ✨ 폼 컴포넌트 추가 */}
                 <ListWrapper>
                     <ListHeader>
@@ -416,7 +416,7 @@ export default function SchedulePage() {
                                       </ItemContentCell>
                                   </StyledLink>
                               ))
-                            : // 데이터는 없지만 폼이 보이는 중일 때
+                            : // 데이터는 없지만 폼이 보이는 중이 아닐 때 이 메시지 표시
                               !showAddForm && (
                                   <p>
                                       아직 등록된 여행 일정이 없습니다. 위에

@@ -1,10 +1,12 @@
 // src/pages/ItemDetailPage.tsx (가칭. 상세 페이지 컴포넌트 파일 이름에 맞춰주세요!)
 import { useEffect, useState } from 'react'; // ✨ 추가
 import axios from 'axios'; // ✨ 추가
-import { useParams, Link, useLocation } from 'react-router-dom'; // useParams 추가!
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom'; // useParams 추가!
 import PageHeader from '../components/PageHeader';
 import {
     Container,
+    BaseBtnWrap,
+
     // PageContent,
     // TopBar,
     // TopBarInner,
@@ -51,6 +53,8 @@ interface TravelItemType extends BaseItem {
 type Item = ReservationItemType | TravelItemType;
 
 export default function ItemDetailPage() {
+    const navigate = useNavigate();
+
     // 컴포넌트 이름은 실제 파일 이름에 맞춰주세요!
     // ✨ useParams로 URL에서 id 가져오기!
     // 라우트가 /reservation-detail/:id 라면 { id } = useParams<{ id: string }>();
@@ -88,6 +92,7 @@ export default function ItemDetailPage() {
             } else {
                 setError('알 수 없는 아이템 유형입니다.'); // 'reservation'이나 'travel'이 아닌 다른 값이 넘어오면
                 setLoading(false);
+
                 return;
             }
 
@@ -192,25 +197,21 @@ export default function ItemDetailPage() {
                         <RenderContent item={item} />
                     </div>
 
-                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <p
-                            style={{
-                                marginTop: 24,
-                                border: '1px solid #ddd',
-                                textAlign: 'center',
-                                borderRadius: 4,
-                                display: 'inline-block',
-                            }}
-                        >
-                            <Link
-                                to={backTo}
-                                aria-label="닫기"
-                                style={{ padding: 12, display: 'block' }}
-                            >
+                    <ButtonsWrap style={{ marginTop: '30px' }}>
+                        <ButtonsWrap>
+                            <BaseBtnWrap>
+                                <button>수정</button>
+                            </BaseBtnWrap>
+                            <BaseBtnWrap>
+                                <button>삭제</button>
+                            </BaseBtnWrap>
+                        </ButtonsWrap>
+                        <BaseBtnWrap>
+                            <button onClick={() => navigate('/schedule')}>
                                 닫기
-                            </Link>
-                        </p>
-                    </div>
+                            </button>
+                        </BaseBtnWrap>
+                    </ButtonsWrap>
                 </Container>
             </PageContent>
         </>
@@ -259,6 +260,7 @@ function RenderContent({ item }: RenderContentProps) {
     } else if (item.kind === 'travel') {
         // 여행 아이템 상세 렌더링
         const travel = item as TravelItemType;
+
         return (
             <div>
                 <h4>{travel.content}</h4>
@@ -299,7 +301,11 @@ function RenderContent({ item }: RenderContentProps) {
     return <p>알 수 없는 아이템 유형입니다.</p>;
 }
 import styled from 'styled-components';
-
+const ButtonsWrap = styled.div`
+    display: flex;
+    justify-content: space-between;
+    gap: 4px;
+`;
 const TOPBAR_HEIGHT = '64px';
 
 const DetailContentWrap = styled.div`

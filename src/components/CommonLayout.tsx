@@ -41,9 +41,9 @@ export const LodgingTagsContainer = styled.div`
 export const BaseBtnWrap = styled.div`
     display: flex;
     border: 1px solid #ccc;
-    padding: 4px 12px;
     border-radius: 4px;
     button {
+        padding: 4px 12px;
         color: #555;
         font-weight: 500;
     }
