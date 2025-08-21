@@ -227,9 +227,9 @@ function RenderContent({ item }: RenderContentProps) {
         // 예약 아이템 상세 렌더링
         const reservation = item as ReservationItemType;
         return (
-            <div>
-                <h4>{reservation.title}</h4>
-                <p>날짜: {reservation.date}</p>
+            <DetailContentWrap>
+                {/* <h4>{reservation.title}</h4> */}
+                <p className="reservation_date">날짜: {reservation.date}</p>
                 {reservation.content && <p>내용: {reservation.content}</p>}
                 {reservation.contentType === 'table' &&
                     reservation.contentData && (
@@ -254,7 +254,7 @@ function RenderContent({ item }: RenderContentProps) {
                             </tbody>
                         </Table>
                     )}
-            </div>
+            </DetailContentWrap>
         );
     } else if (item.kind === 'travel') {
         // 여행 아이템 상세 렌더링
@@ -271,7 +271,7 @@ function RenderContent({ item }: RenderContentProps) {
                     <Table>
                         <colgroup>
                             <col style={{ width: '20%' }} />
-                            <col style={{ width: '30%' }} />
+                            <col style={{ width: '40%' }} />
                         </colgroup>
                         <thead>
                             <tr>
@@ -302,6 +302,12 @@ import styled from 'styled-components';
 
 const TOPBAR_HEIGHT = '64px';
 
+const DetailContentWrap = styled.div`
+    .reservation_date {
+        padding: 14px 0 8px 24px;
+        font-size: 14px;
+    }
+`;
 const TopBar = styled.header`
     position: fixed;
     top: 0;

@@ -5,6 +5,7 @@ import Tabs from '../components/Tabs';
 import {
     Container,
     LodgingTagsContainer,
+    BaseBtnWrap,
     LodgingTag,
     // ScheduleSection as _Unused, // 사용하지 않는 임포트는 제거하는 것이 좋아요!
     ListWrapper,
@@ -155,15 +156,19 @@ export default function SchedulePage() {
 
             <Tabs />
             <PageWrap>
-                <LodgingTagsContainer>
-                    <LodgingTag type="camping">
-                        <span className="icon">🏕️</span> 캠핑장
-                    </LodgingTag>
-                    <LodgingTag type="hotel">
-                        <span className="icon">🏨</span> 호텔
-                    </LodgingTag>
-                </LodgingTagsContainer>
-
+                <div className="inner">
+                    <LodgingTagsContainer>
+                        <LodgingTag type="camping">
+                            <span className="icon">🏕️</span> 캠핑장
+                        </LodgingTag>
+                        <LodgingTag type="hotel">
+                            <span className="icon">🏨</span> 호텔
+                        </LodgingTag>
+                    </LodgingTagsContainer>
+                    <BaseBtnWrap>
+                        <button>일정추가</button>
+                    </BaseBtnWrap>
+                </div>
                 <ListWrapper>
                     <ListHeader>
                         <HeaderCell basis={COL_WIDTH_DAY}>day</HeaderCell>

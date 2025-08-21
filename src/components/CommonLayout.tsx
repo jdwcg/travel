@@ -25,13 +25,28 @@ export const PageWrap = styled.div`
     box-sizing: border-box;
     position: relative;
     z-index: 1;
+    .inner {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 14px;
+    }
 `;
 /* Lodging tags */
 export const LodgingTagsContainer = styled.div`
-    margin: 12px 0;
     display: flex;
     justify-content: flex-start;
+    align-items: center;
     gap: 8px;
+`;
+export const BaseBtnWrap = styled.div`
+    display: flex;
+    border: 1px solid #ccc;
+    padding: 4px 12px;
+    border-radius: 4px;
+    button {
+        color: #555;
+        font-weight: 500;
+    }
 `;
 
 export const LodgingTag = styled.span<{ type: 'camping' | 'hotel' }>`
