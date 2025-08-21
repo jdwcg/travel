@@ -476,17 +476,17 @@ export const ButtonContainer = styled.div`
 `;
 
 export const Button = styled.button<{ primary?: boolean }>`
-    padding: 10px 18px;
+    padding: 8px 14px;
     border: none;
-    border-radius: 5px;
-    font-size: 15px;
+    border-radius: 4px;
+    font-size: 14px;
     cursor: pointer;
-    background-color: ${(props) => (props.primary ? '#5b9dff' : '#ccc')};
+    background-color: ${(props) => (props.primary ? 'dodgerblue' : '#ccc')};
     color: ${(props) => (props.primary ? 'white' : '#333')};
     margin-left: 10px;
     transition: background-color 0.2s ease-in-out;
     &:hover {
-        background-color: ${(props) => (props.primary ? '#4a8ee0' : '#bbb')};
+        background-color: ${(props) => (props.primary ? 'dodgerblue' : '#bbb')};
     }
 `;
 
