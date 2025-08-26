@@ -1,56 +1,15 @@
-// src/pages/ItemDetailPage.tsx (가칭. 상세 페이지 컴포넌트 파일 이름에 맞춰주세요!)
+// src/pages/ItemDetailPage.tsx
 import { useEffect, useState } from 'react'; // ✨ 추가
 import axios from 'axios'; // ✨ 추가
-import { useParams, Link, useLocation, useNavigate } from 'react-router-dom'; // useParams 추가!
+import { useParams, Link, useLocation, useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
-import {
-    Container,
-    BaseBtnWrap,
-
-    // PageContent,
-    // TopBar,
-    // TopBarInner,
-    // BarTitle,
-    // CloseLink,
-} from '../components/CommonLayout';
-
+import { Container, BaseBtnWrap } from '../components/CommonLayout';
+import type {
+    Item,
+    ReservationItemType,
+    TravelItemType,
+} from '../types/ItemTypes';
 // 💡 백엔드에서 오는 데이터 구조와 맞춰야 해요!
-interface BaseItem {
-    id: string;
-    _id?: string;
-    __v?: number;
-    // ... 공통적으로 포함될 필드들 (title, content, contentType, contentData 등)
-}
-
-interface ReservationItemType extends BaseItem {
-    // Reservation specific fields
-    date: string;
-    title: string;
-    contentType?: 'text' | 'html' | 'table';
-    content?: string;
-    contentData?: {
-        headers?: string[];
-        rows?: string[][];
-    };
-    kind: 'reservation'; // 어떤 타입의 아이템인지 구별하기 위한 필드
-}
-
-interface TravelItemType extends BaseItem {
-    // Travel specific fields
-    date: string; // ISO: 'YYYY-MM-DD' 또는 '1', '2'
-    day: string;
-    type: 'camping' | 'hotel' | 'activity' | 'food';
-    content: string;
-    lodging?: 'camping' | 'hotel';
-    contentType?: 'text' | 'html' | 'table';
-    contentData?: {
-        headers?: string[];
-        rows?: string[][];
-    };
-    kind: 'travel'; // 어떤 타입의 아이템인지 구별하기 위한 필드
-}
-
-type Item = ReservationItemType | TravelItemType;
 
 export default function ItemDetailPage() {
     const navigate = useNavigate();
