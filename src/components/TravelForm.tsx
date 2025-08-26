@@ -5,10 +5,16 @@ import { useNavigate } from 'react-router-dom';
 import type { TravelItemType } from '../types/ItemTypes';
 
 interface TravelFormProps {
-    travelItem: TravelItemType; // 기존 데이터 전달
+    travelItem?: TravelItemType; // 수정 시 기존 데이터 전달
+    onAdd?: (newItem: TravelItemType) => void; // 추가 성공 후 호출
+    onCancel?: () => void;
 }
 
-export default function TravelForm({ travelItem }: TravelFormProps) {
+export default function TravelForm({
+    travelItem,
+    onAdd,
+    onCancel,
+}: TravelFormProps) {
     const navigate = useNavigate();
 
     // form state 초기화
@@ -23,7 +29,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         contentData: { headers: [], rows: [] },
     });
 
-    // 기존 데이터 반영
+    // 기존 데이터 반영 (수정용)
     useEffect(() => {
         if (travelItem) {
             setFormData(travelItem);
@@ -42,7 +48,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         console.log('변경된 값:', name, value);
     };
 
-    // table data 변경 핸들러 예시
+    // table data 변경 핸들러
     const handleTableCellChange = (
         rowIndex: number,
         colIndex: number,
@@ -59,7 +65,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         console.log('테이블 변경:', newRows);
     };
 
-    // submit 핸들러
+    // submit 핸들러 (수정/추가 모두 처리)
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         const password = prompt('관리자 비밀번호 입력');
@@ -68,22 +74,46 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         console.log('서버로 전송할 데이터:', formData);
 
         try {
-            const response = await axios.put(
-                `http://localhost:5000/api/travelDates/${formData.id}`,
-                formData,
-                { headers: { 'x-admin-password': password } },
-            );
-            console.log('저장 성공:', response.data);
-            alert('저장 완료!');
-            navigate('/schedule'); // 목록으로 이동
+            let response;
+            if (travelItem?.id) {
+                // 수정
+                response = await axios.put(
+                    `http://localhost:5000/api/travelDates/${formData.id}`,
+                    formData,
+                    { headers: { 'x-admin-password': password } },
+                );
+            } else {
+                // 신규 추가
+                response = await axios.post(
+                    `http://localhost:5000/api/travelDates`,
+                    formData,
+                    { headers: { 'x-admin-password': password } },
+                );
+            }
+
+            alert('추가/수정 완료!');
+            if (onAdd) onAdd(response.data); // SchedulePage에 전달
         } catch (err: any) {
-            console.error('저장 실패 에러:', err.response || err);
+            console.error(err.response || err);
             alert(`저장 실패! ${err.response?.data?.message || err.message}`);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form
+            onSubmit={handleSubmit}
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '12px',
+                maxWidth: '500px',
+                margin: '0 auto',
+                padding: '12px',
+                border: '1px solid #ccc',
+                borderRadius: '8px',
+                background: '#f9f9f9',
+            }}
+        >
             <div>
                 <label>ID:</label>
                 <input
@@ -91,7 +121,14 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     name="id"
                     value={formData.id}
                     onChange={handleChange}
-                    readOnly
+                    readOnly={!!travelItem}
+                    placeholder="자동 생성"
+                    style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
                 />
             </div>
 
@@ -102,6 +139,13 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     name="date"
                     value={formData.date}
                     onChange={handleChange}
+                    placeholder="예: 2025-10-01"
+                    style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
                 />
             </div>
 
@@ -112,6 +156,13 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     name="day"
                     value={formData.day}
                     onChange={handleChange}
+                    placeholder="예: 월"
+                    style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
                 />
             </div>
 
@@ -122,6 +173,13 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     name="type"
                     value={formData.type}
                     onChange={handleChange}
+                    placeholder="예: camping / hotel / activity / food"
+                    style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
                 />
             </div>
 
@@ -131,6 +189,14 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     name="content"
                     value={formData.content}
                     onChange={handleChange}
+                    placeholder="여행 내용 입력"
+                    style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                        minHeight: '60px',
+                    }}
                 />
             </div>
 
@@ -140,6 +206,12 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     name="lodging"
                     value={formData.lodging || ''}
                     onChange={handleChange}
+                    style={{
+                        width: '100%',
+                        padding: '6px 8px',
+                        borderRadius: '4px',
+                        border: '1px solid #ccc',
+                    }}
                 >
                     <option value="">선택</option>
                     <option value="camping">Camping</option>
@@ -168,6 +240,12 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                                                 e.target.value,
                                             )
                                         }
+                                        style={{
+                                            flex: 1,
+                                            padding: '4px',
+                                            borderRadius: '4px',
+                                            border: '1px solid #ccc',
+                                        }}
                                     />
                                 ))}
                             </div>
@@ -175,10 +253,33 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     </div>
                 )}
 
-            <button type="submit">저장</button>
-            <button type="button" onClick={() => navigate('/schedule')}>
-                취소
-            </button>
+            <div style={{ display: 'flex', gap: '8px' }}>
+                <button
+                    type="submit"
+                    style={{
+                        padding: '8px 12px',
+                        borderRadius: '4px',
+                        border: 'none',
+                        backgroundColor: '#4caf50',
+                        color: '#fff',
+                    }}
+                >
+                    저장
+                </button>
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    style={{
+                        padding: '8px 12px',
+                        borderRadius: '4px',
+                        border: 'none',
+                        backgroundColor: '#f44336',
+                        color: '#fff',
+                    }}
+                >
+                    취소
+                </button>
+            </div>
         </form>
     );
 }

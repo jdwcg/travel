@@ -28,11 +28,9 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
-// ✨ TravelForm import
-// import type { TravelItemType } from '../components/TravelForm';
 import type { TravelItemType } from '../types/TravelTypes';
 import TravelForm from '../components/TravelForm';
-// ActivityIcon 컴포넌트
+
 function ActivityIcon({ type }: { type: TravelItemType['type'] }) {
     const map: Record<TravelItemType['type'], string> = {
         camping: '🏕️',
@@ -49,7 +47,6 @@ export default function SchedulePage() {
     const [error, setError] = useState<string | null>(null);
     const [showAddForm, setShowAddForm] = useState(false);
 
-    // 데이터를 가져오는 함수
     const fetchTravelDates = async () => {
         try {
             setLoading(true);
@@ -72,14 +69,10 @@ export default function SchedulePage() {
         fetchTravelDates();
     }, []);
 
-    const handleAddClick = () => {
-        setShowAddForm(true);
-    };
+    const handleAddClick = () => setShowAddForm(true);
+    const handleCancelAdd = () => setShowAddForm(false);
 
-    const handleCancelAdd = () => {
-        setShowAddForm(false);
-    };
-
+    // ✨ 여기만 추가/수정
     const handleAddSuccess = (newTravel: TravelItemType) => {
         setTravelDates((prev) => {
             const updatedDates = [...prev, newTravel];
@@ -117,21 +110,6 @@ export default function SchedulePage() {
         );
     }
 
-    if (travelDates.length === 0 && !showAddForm) {
-        return (
-            <Container>
-                <PageHeader title="10월 제주 여행" />
-                <Tabs />
-                <PageWrap>
-                    <p>아직 여행 일정 데이터가 없습니다.</p>
-                    <BaseBtnWrap>
-                        <button onClick={handleAddClick}>일정추가</button>
-                    </BaseBtnWrap>
-                </PageWrap>
-            </Container>
-        );
-    }
-
     return (
         <Container>
             <PageHeader title="10월 제주 여행" />
@@ -148,7 +126,9 @@ export default function SchedulePage() {
                         </BaseBtnWrap>
                     </div>
                 )}
+
                 {showAddForm && (
+                    // ✨ TravelForm에서 onAdd 호출 시 바로 목록 반영
                     <TravelForm
                         onAdd={handleAddSuccess}
                         onCancel={handleCancelAdd}
@@ -211,7 +191,6 @@ export default function SchedulePage() {
     );
 }
 
-// ✨ 하단 CalendarLink 관련 스타일은 그대로 유지
 export const CalendarView = styled.div`
     margin-top: 20px;
     padding: 0;
