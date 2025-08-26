@@ -1,211 +1,184 @@
 // src/components/TravelForm.tsx
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-    FormContainer,
-    FormField,
-    Label,
-    Input,
-    Select,
-    ButtonContainer,
-    Button,
-} from './TravelFormStyles'; // 스타일은 따로 분리해서 import
+import { useNavigate } from 'react-router-dom';
+import type { TravelItemType } from '../types/ItemTypes';
 
-// 💡 TravelItemType은 SchedulePage와 공유하므로 인터페이스는 SchedulePage에서 import 가능하게
-export interface TravelItemType {
-    id: string;
-    date: string;
-    day: '월' | '화' | '수' | '목' | '금' | '토' | '일';
-    type: 'camping' | 'hotel' | 'activity' | 'food';
-    content: string;
-    lodging?: 'camping' | 'hotel';
-    contentType?: 'text' | 'html' | 'table';
-    contentData?: {
-        headers?: string[];
-        rows?: string[][];
-    };
-    _id?: string;
-    __v?: number;
+interface TravelFormProps {
+    travelItem: TravelItemType; // 기존 데이터 전달
 }
 
-interface AddTravelFormProps {
-    onAdd: (newTravel: TravelItemType) => void;
-    onCancel: () => void;
-}
+export default function TravelForm({ travelItem }: TravelFormProps) {
+    const navigate = useNavigate();
 
-export default function TravelForm({ onAdd, onCancel }: AddTravelFormProps) {
-    const [formData, setFormData] = useState<
-        Omit<
-            TravelItemType,
-            '_id' | '__v' | 'contentData' | 'contentType' | 'lodging'
-        >
-    >({
+    // form state 초기화
+    const [formData, setFormData] = useState<TravelItemType>({
         id: '',
         date: '',
-        day: '월',
-        type: 'activity',
+        day: '',
+        type: '',
         content: '',
+        lodging: undefined,
+        contentType: 'text',
+        contentData: { headers: [], rows: [] },
     });
-    const [adminPassword, setAdminPassword] = useState('');
 
+    // 기존 데이터 반영
+    useEffect(() => {
+        if (travelItem) {
+            setFormData(travelItem);
+            console.log('기존 데이터 불러오기:', travelItem);
+        }
+    }, [travelItem]);
+
+    // input 변경 핸들러
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+        e: React.ChangeEvent<
+            HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+        >,
     ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
+        console.log('변경된 값:', name, value);
     };
 
-    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setAdminPassword(e.target.value);
+    // table data 변경 핸들러 예시
+    const handleTableCellChange = (
+        rowIndex: number,
+        colIndex: number,
+        value: string,
+    ) => {
+        const newRows = formData.contentData?.rows
+            ? [...formData.contentData.rows]
+            : [];
+        newRows[rowIndex][colIndex] = value;
+        setFormData((prev) => ({
+            ...prev,
+            contentData: { ...prev.contentData, rows: newRows },
+        }));
+        console.log('테이블 변경:', newRows);
     };
 
+    // submit 핸들러
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (
-            !formData.id ||
-            !formData.date ||
-            !formData.day ||
-            !formData.type ||
-            !formData.content
-        ) {
-            alert('모든 필수 정보를 입력해주세요.');
-            return;
-        }
-        if (!adminPassword) {
-            alert('일정을 추가하려면 관리자 비밀번호를 입력해야 합니다.');
-            return;
-        }
+        const password = prompt('관리자 비밀번호 입력');
+        if (password !== '6948') return alert('비밀번호 불일치!');
+
+        console.log('서버로 전송할 데이터:', formData);
 
         try {
-            const response = await axios.post<TravelItemType>(
-                'http://localhost:5000/api/traveldates',
+            const response = await axios.put(
+                `http://localhost:5000/api/travelDates/${formData.id}`,
                 formData,
-                { headers: { 'X-Admin-Password': adminPassword } },
+                { headers: { 'x-admin-password': password } },
             );
-            alert('일정이 성공적으로 추가되었습니다!');
-            onAdd(response.data);
-
-            // 폼 초기화
-            setFormData({
-                id: '',
-                date: '',
-                day: '월',
-                type: 'activity',
-                content: '',
-            });
-            setAdminPassword('');
-        } catch (error) {
-            console.error('여행 일정 추가 실패:', error);
-            if (axios.isAxiosError(error) && error.response) {
-                if (error.response.status === 401) {
-                    alert('일정 추가 실패: 잘못된 관리자 비밀번호입니다.');
-                } else {
-                    alert(
-                        '일정 추가에 실패했습니다: ' +
-                            (error.response.data.message || error.message),
-                    );
-                }
-            } else {
-                alert('일정 추가에 실패했습니다.');
-            }
+            console.log('저장 성공:', response.data);
+            alert('저장 완료!');
+            navigate('/schedule'); // 목록으로 이동
+        } catch (err: any) {
+            console.error('저장 실패 에러:', err.response || err);
+            alert(`저장 실패! ${err.response?.data?.message || err.message}`);
         }
     };
 
     return (
-        <FormContainer>
-            <h4 style={{ marginTop: 0 }}>새 여행 일정 추가</h4>
-            <form onSubmit={handleSubmit}>
-                <FormField>
-                    <Label htmlFor="id">ID:</Label>
-                    <Input
-                        type="text"
-                        id="id"
-                        name="id"
-                        value={formData.id}
-                        onChange={handleChange}
-                        placeholder="day1, day2 처럼 고유한 ID"
-                        required
-                    />
-                </FormField>
-                <FormField>
-                    <Label htmlFor="date">날짜 (일):</Label>
-                    <Input
-                        type="text"
-                        id="date"
-                        name="date"
-                        value={formData.date}
-                        onChange={handleChange}
-                        placeholder="예: 1 (일자만)"
-                        required
-                    />
-                </FormField>
-                <FormField>
-                    <Label htmlFor="day">요일:</Label>
-                    <Select
-                        id="day"
-                        name="day"
-                        value={formData.day}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="월">월</option>
-                        <option value="화">화</option>
-                        <option value="수">수</option>
-                        <option value="목">목</option>
-                        <option value="금">금</option>
-                        <option value="토">토</option>
-                        <option value="일">일</option>
-                    </Select>
-                </FormField>
-                <FormField>
-                    <Label htmlFor="type">유형:</Label>
-                    <Select
-                        id="type"
-                        name="type"
-                        value={formData.type}
-                        onChange={handleChange}
-                        required
-                    >
-                        <option value="activity">활동 🎒</option>
-                        <option value="camping">캠핑 🏕️</option>
-                        <option value="hotel">호텔 🏨</option>
-                        <option value="food">음식 🍽️</option>
-                    </Select>
-                </FormField>
-                <FormField>
-                    <Label htmlFor="content">내용:</Label>
-                    <Input
-                        type="text"
-                        id="content"
-                        name="content"
-                        value={formData.content}
-                        onChange={handleChange}
-                        placeholder="예: 제주도 도착"
-                        required
-                    />
-                </FormField>
-                <FormField>
-                    <Label htmlFor="adminPassword">비밀번호:</Label>
-                    <Input
-                        type="password"
-                        id="adminPassword"
-                        name="adminPassword"
-                        value={adminPassword}
-                        onChange={handlePasswordChange}
-                        placeholder="관리자 비밀번호"
-                        required
-                    />
-                </FormField>
+        <form onSubmit={handleSubmit}>
+            <div>
+                <label>ID:</label>
+                <input
+                    type="text"
+                    name="id"
+                    value={formData.id}
+                    onChange={handleChange}
+                    readOnly
+                />
+            </div>
 
-                <ButtonContainer>
-                    <Button type="submit" primary>
-                        추가하기
-                    </Button>
-                    <Button type="button" onClick={onCancel}>
-                        취소
-                    </Button>
-                </ButtonContainer>
-            </form>
-        </FormContainer>
+            <div>
+                <label>날짜:</label>
+                <input
+                    type="text"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div>
+                <label>요일:</label>
+                <input
+                    type="text"
+                    name="day"
+                    value={formData.day}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div>
+                <label>활동 유형:</label>
+                <input
+                    type="text"
+                    name="type"
+                    value={formData.type}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div>
+                <label>내용:</label>
+                <textarea
+                    name="content"
+                    value={formData.content}
+                    onChange={handleChange}
+                />
+            </div>
+
+            <div>
+                <label>숙소:</label>
+                <select
+                    name="lodging"
+                    value={formData.lodging || ''}
+                    onChange={handleChange}
+                >
+                    <option value="">선택</option>
+                    <option value="camping">Camping</option>
+                    <option value="hotel">Hotel</option>
+                </select>
+            </div>
+
+            {/* table contentType일 경우 간단 예시 */}
+            {formData.contentType === 'table' &&
+                formData.contentData?.rows?.length > 0 && (
+                    <div>
+                        <h4>테이블 데이터</h4>
+                        {formData.contentData.rows.map((row, rIdx) => (
+                            <div
+                                key={rIdx}
+                                style={{ display: 'flex', gap: '4px' }}
+                            >
+                                {row.map((cell, cIdx) => (
+                                    <input
+                                        key={cIdx}
+                                        value={cell}
+                                        onChange={(e) =>
+                                            handleTableCellChange(
+                                                rIdx,
+                                                cIdx,
+                                                e.target.value,
+                                            )
+                                        }
+                                    />
+                                ))}
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+            <button type="submit">저장</button>
+            <button type="button" onClick={() => navigate('/schedule')}>
+                취소
+            </button>
+        </form>
     );
 }
