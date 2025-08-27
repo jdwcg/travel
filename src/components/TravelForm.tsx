@@ -1,6 +1,6 @@
 // src/components/TravelForm.tsx
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import { useNavigate } from 'react-router-dom';
 import type { TravelItemType } from '../types/TravelTypes';
 
@@ -74,19 +74,17 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
 
             if (travelItem?.id) {
                 // 수정
-                await axios.put(
-                    `http://localhost:5000/api/travelDates/${submitData.id}`,
+                await axiosClient.put(
+                    `/api/travelDates/${submitData.id}`,
                     submitData,
                     { headers: { 'x-admin-password': password } },
                 );
                 alert('수정 완료!');
             } else {
                 // 신규
-                await axios.post(
-                    `http://localhost:5000/api/travelDates`,
-                    submitData,
-                    { headers: { 'x-admin-password': password } },
-                );
+                await axiosClient.post(`/api/travelDates`, submitData, {
+                    headers: { 'x-admin-password': password },
+                });
                 alert('추가 완료!');
             }
 

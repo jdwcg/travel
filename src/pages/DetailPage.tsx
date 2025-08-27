@@ -1,6 +1,6 @@
 // src/pages/DetailPage.tsx (이제 TravelDetailPage.tsx로 파일 이름도 바꾸는 것을 추천해요!)
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import { useParams, useNavigate } from 'react-router-dom';
 import TravelForm from '../components/TravelForm';
 import styled from 'styled-components';
@@ -28,9 +28,9 @@ export default function TravelDetailPage() {
             try {
                 // ✨ endpoint를 'travelDates'로 고정!
                 const endpoint = 'travelDates';
-                // ✨ axios.get<TravelItemType>으로 명확히!
-                const res = await axios.get<TravelItemType>(
-                    `http://localhost:5000/api/${endpoint}/${id}`,
+                // ✨ axiosClient.get<TravelItemType>으로 명확히!
+                const res = await axiosClient.get<TravelItemType>(
+                    `/api/${endpoint}/${id}`,
                 );
                 // ✨ setItem({ ...res.data, kind: itemType }); 이거 삭제!
                 setItem(res.data);
@@ -57,12 +57,9 @@ export default function TravelDetailPage() {
         const password = prompt('관리자 비밀번호 입력');
         if (password !== '6948') return alert('비밀번호 불일치!');
         try {
-            await axios.delete(
-                `http://localhost:5000/api/travelDates/${item.id}`,
-                {
-                    headers: { 'x-admin-password': password },
-                },
-            );
+            await axiosClient.delete(`/api/travelDates/${item.id}`, {
+                headers: { 'x-admin-password': password },
+            });
             alert('삭제 완료!');
             navigate('/schedule');
         } catch (err: any) {

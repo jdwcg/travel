@@ -1,6 +1,6 @@
 // src/pages/CalendarPage.tsx
 import { useState, useEffect, useMemo } from 'react';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -56,8 +56,8 @@ export default function CalendarPage() {
         const fetchTravelDates = async () => {
             try {
                 setLoading(true);
-                const response = await axios.get<TravelItemType[]>(
-                    'http://localhost:5000/api/travelDates',
+                const response = await axiosClient.get<TravelItemType[]>(
+                    '/api/travelDates',
                 );
                 setTravelDates(response.data);
             } catch (err) {

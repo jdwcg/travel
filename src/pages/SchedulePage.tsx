@@ -24,7 +24,7 @@ import {
 } from '../components/CommonLayout';
 
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import { Link } from 'react-router-dom';
 
 import type { TravelItemType } from '../types/TravelTypes';
@@ -53,8 +53,8 @@ export default function SchedulePage() {
         try {
             setLoading(true);
             setError(null);
-            const response = await axios.get<TravelItemType[]>(
-                'http://localhost:5000/api/traveldates',
+            const response = await axiosClient.get<TravelItemType[]>(
+                '/api/travelDates',
             );
             setTravelDates(response.data);
         } catch (err) {

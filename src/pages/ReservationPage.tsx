@@ -9,7 +9,7 @@ import {
 } from '../components/CommonLayout';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 import type { ReservationItemType } from '../types/ReservationTypes';
 import styled from 'styled-components';
 const Spacer = styled.div`
@@ -28,8 +28,8 @@ export default function ReservationPage() {
             try {
                 setLoading(true);
                 setError(null);
-                const res = await axios.get<ReservationItemType[]>(
-                    'http://localhost:5000/api/reservations',
+                const res = await axiosClient.get<ReservationItemType[]>(
+                    '/api/reservations',
                 );
                 setReservations(res.data);
             } catch (err) {

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // useLocation은 이 시점에선 필요 없어서 제거했어요!
 import ReservationForm from '../components/ReservationForm'; // ReservationForm을 임포트합니다.
 import type { ReservationItemType } from '../types/ReservationTypes';
-import axios from 'axios';
+import axiosClient from '../api/axiosClient';
 // import PageHeader from '../components/PageHeader';
 // import Tabs from '../components/Tabs';
 import { Container, PageWrap, BaseBtnWrap } from '../components/CommonLayout';
@@ -32,8 +32,8 @@ export default function ReservationDetailPage() {
 
             try {
                 // ✨ API에서 전체를 불러와 찾는 대신, 해당 ID의 예약만 직접 불러옵니다. (훨씬 효율적!)
-                const res = await axios.get<ReservationItemType>(
-                    `http://localhost:5000/api/reservations/${id}`,
+                const res = await axiosClient.get<ReservationItemType>(
+                    `/api/reservations/${id}`,
                 );
                 setReservation(res.data);
             } catch (err: any) {
@@ -64,11 +64,9 @@ export default function ReservationDetailPage() {
         try {
             // PUT 요청으로 예약 정보 업데이트
             // 백엔드 app.js의 PUT 라우트에 x-admin-password 헤더가 필요해요!
-            await axios.put(
-                `http://localhost:5000/api/reservations/${id}`,
-                updatedData,
-                { headers: { 'x-admin-password': password } },
-            );
+            await axiosClient.put(`/api/reservations/${id}`, updatedData, {
+                headers: { 'x-admin-password': password },
+            });
             alert('예약이 성공적으로 수정되었습니다!');
             setReservation(updatedData); // 화면의 데이터도 즉시 업데이트
             setEditing(false); // 수정 모드 종료
@@ -91,8 +89,8 @@ export default function ReservationDetailPage() {
         }
 
         try {
-            await axios.delete(
-                `http://localhost:5000/api/reservations/${id}`, // reservations 엔드포인트 사용!
+            await axiosClient.delete(
+                `/api/reservations/${id}`, // reservations 엔드포인트 사용!
                 { headers: { 'x-admin-password': password } },
             );
             alert('예약이 성공적으로 삭제되었습니다!');
