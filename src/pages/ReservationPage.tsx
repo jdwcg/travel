@@ -11,7 +11,10 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import type { ReservationItemType } from '../types/ReservationTypes';
-
+import styled from 'styled-components';
+const Spacer = styled.div`
+    margin-top: 80px;
+`;
 export default function ReservationPage() {
     const location = useLocation();
     const navigate = useNavigate();
@@ -68,6 +71,8 @@ export default function ReservationPage() {
         <Container>
             <PageHeader title="10월 제주 여행" />
             <Tabs />
+            <Spacer></Spacer>
+
             <PageWrap>
                 <BaseBtnWrap>
                     <button onClick={() => navigate('/reservation/create')}>

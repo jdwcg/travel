@@ -20,7 +20,7 @@ export const Container = styled.main`
 `;
 
 export const PageWrap = styled.div`
-    margin-top: 80px;
+    /* margin-top: 80px; */
     padding: 0;
     box-sizing: border-box;
     position: relative;
@@ -70,7 +70,7 @@ export const LodgingTag = styled.span<{ type: 'camping' | 'hotel' }>`
 
 /* Reservation */
 export const ReservationSection = styled.section`
-    margin-top: 20px;
+    /* margin-top: 20px; */
     padding: 12px 0;
 
     & > p {

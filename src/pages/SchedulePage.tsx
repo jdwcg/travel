@@ -26,11 +26,13 @@ import {
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
 
 import type { TravelItemType } from '../types/TravelTypes';
 import TravelForm from '../components/TravelForm';
-
+import styled from 'styled-components';
+const Spacer = styled.div`
+    margin-top: 80px;
+`;
 function ActivityIcon({ type }: { type: TravelItemType['type'] }) {
     const map: Record<TravelItemType['type'], string> = {
         camping: '🏕️',
@@ -114,6 +116,7 @@ export default function SchedulePage() {
         <Container>
             <PageHeader title="10월 제주 여행" />
             <Tabs />
+            <Spacer></Spacer>
             <PageWrap>
                 {!showAddForm && (
                     <div className="inner">
