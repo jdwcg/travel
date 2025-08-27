@@ -6,7 +6,10 @@ import axios from 'axios';
 import PageHeader from '../components/PageHeader';
 import Tabs from '../components/Tabs';
 import { Container, PageWrap } from '../components/CommonLayout';
-
+import styled from 'styled-components';
+const Spacer = styled.div`
+    margin-top: 80px;
+`;
 export default function ReservationCreatePage() {
     const navigate = useNavigate();
 
@@ -26,6 +29,7 @@ export default function ReservationCreatePage() {
             <PageHeader title="예약 등록" />
             <Tabs />
             <PageWrap>
+                <Spacer></Spacer>
                 <ReservationForm
                     onSubmit={handleSubmit}
                     onCancel={() => navigate('/reservation')}
