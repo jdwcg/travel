@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import type { ReservationItemType } from '../types/ReservationTypes';
 import styled from 'styled-components';
+import { BaseBtnWrap } from './CommonLayout';
 
 interface ReservationFormProps {
     reservation?: ReservationItemType;
@@ -103,10 +104,14 @@ export default function ReservationForm({
             )}
 
             <ButtonGroup>
-                <button type="submit">저장</button>
-                <button type="button" onClick={onCancel}>
-                    닫기
-                </button>
+                <BaseBtnWrap>
+                    <button type="submit">저장</button>
+                </BaseBtnWrap>
+                <BaseBtnWrap>
+                    <button type="button" onClick={onCancel}>
+                        닫기
+                    </button>
+                </BaseBtnWrap>
             </ButtonGroup>
         </FormWrapper>
     );

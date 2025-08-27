@@ -5,6 +5,7 @@ import {
     ReservationSection,
     ReservationItem,
     PageWrap,
+    BaseBtnWrap,
 } from '../components/CommonLayout';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -68,9 +69,11 @@ export default function ReservationPage() {
             <PageHeader title="10월 제주 여행" />
             <Tabs />
             <PageWrap>
-                <button onClick={() => navigate('/reservation/create')}>
-                    예약 등록
-                </button>
+                <BaseBtnWrap>
+                    <button onClick={() => navigate('/reservation/create')}>
+                        예약 등록
+                    </button>
+                </BaseBtnWrap>
                 <ReservationSection>
                     {reservations.map((r) => (
                         <Link

@@ -4,7 +4,7 @@ import type { ReservationItemType } from '../types/ReservationTypes';
 import axios from 'axios';
 import PageHeader from '../components/PageHeader';
 import Tabs from '../components/Tabs';
-import { Container, PageWrap } from '../components/CommonLayout';
+import { Container, PageWrap, BaseBtnWrap } from '../components/CommonLayout';
 import styled from 'styled-components';
 
 export default function ReservationDetailPage() {
@@ -62,7 +62,11 @@ export default function ReservationDetailPage() {
             <PageHeader title={reservation.title} />
             <Tabs />
             <PageWrap>
-                <button onClick={() => navigate('/reservation')}>닫기</button>
+                <BaseBtnWrap>
+                    <button onClick={() => navigate('/reservation')}>
+                        닫기
+                    </button>
+                </BaseBtnWrap>
 
                 {reservation.contentType === 'text' && (
                     <p>{reservation.content}</p>
