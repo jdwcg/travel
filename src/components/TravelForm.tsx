@@ -90,7 +90,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                 alert('추가 완료!');
             }
 
-            navigate(`/detail/travel/${submitData.id}`);
+            navigate(`/detail/travel/${submitData.id}`, { replace: true });
         } catch (err: any) {
             console.error('저장 실패:', err.response || err);
             alert(`저장 실패! ${err.response?.data?.message || err.message}`);

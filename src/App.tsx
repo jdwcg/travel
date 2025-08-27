@@ -52,9 +52,11 @@ function ScrollManager() {
 }
 
 export default function AppRoutes() {
+    const location = useLocation();
     return (
         <>
             <ScrollManager />
+
             <Routes>
                 {/* 루트는 HomePage가 받아 재빨리 /schedule로 리다이렉트합니다 */}
                 <Route path="/" element={<HomePage />} />
@@ -65,16 +67,16 @@ export default function AppRoutes() {
                 {/* 기존에 주신 라우트들 (요청 기준으로 그대로 포함) */}
                 <Route
                     path="/detail/:itemType/:id"
-                    element={<ItemDetailPage />}
+                    element={<ItemDetailPage key={location.key} />}
                 />
                 <Route
                     path="/reservation-detail/:id"
-                    element={<ItemDetailPage />}
+                    element={<ItemDetailPage key={location.key} />}
                 />{' '}
                 // 이전 라우트 (삭제하거나 redirect 처리)
                 <Route
                     path="/travel-detail/:id"
-                    element={<ItemDetailPage />}
+                    element={<ItemDetailPage key={location.key} />}
                 />{' '}
                 // 이전 라우트 (삭제하거나 redirect 처리)
                 <Route path="/full-schedule" element={<HomePage />} />
