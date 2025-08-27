@@ -1,172 +1,130 @@
-// src/components/ReservationForm.tsx
-import { useState } from 'react';
+import { useState, FormEvent } from 'react';
+import type { ReservationItemType } from '../types/ReservationTypes';
 import styled from 'styled-components';
-import type { ReservationItemType } from '../types/ItemTypes';
-import axios from 'axios';
 
 interface ReservationFormProps {
-    initialData?: ReservationItemType;
-    adminPassword: string;
+    reservation?: ReservationItemType;
+    onSubmit: (data: ReservationItemType) => void;
     onCancel: () => void;
-    onSuccess: (updatedItem: ReservationItemType) => void;
 }
 
 export default function ReservationForm({
-    initialData,
-    adminPassword,
+    reservation,
+    onSubmit,
     onCancel,
-    onSuccess,
 }: ReservationFormProps) {
-    const [form, setForm] = useState<ReservationItemType>({
-        id: initialData?.id || '',
-        date: initialData?.date || '',
-        title: initialData?.title || '',
-        content: initialData?.content || '',
-        contentType: initialData?.contentType || 'text',
-        contentData: initialData?.contentData || { headers: [], rows: [] },
-    });
+    const [title, setTitle] = useState(reservation?.title || '');
+    const [date, setDate] = useState(reservation?.date || '');
+    const [contentType, setContentType] = useState<
+        ReservationItemType['contentType']
+    >(reservation?.contentType || 'text');
+    const [content, setContent] = useState(reservation?.content || '');
+    const [headers, setHeaders] = useState<string[]>(
+        reservation?.contentData?.headers || [],
+    );
+    const [rows, setRows] = useState<string[][]>(
+        reservation?.contentData?.rows || [],
+    );
 
-    const handleChange = (
-        e: React.ChangeEvent<
-            HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-        >,
-    ) => {
-        const { name, value } = e.target;
-        setForm((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        try {
-            if (initialData) {
-                // 수정
-                const res = await axios.put(
-                    `http://localhost:5000/api/reservations/${form.id}`,
-                    form,
-                    {
-                        headers: { 'x-admin-password': adminPassword },
-                    },
-                );
-                onSuccess(res.data);
-            } else {
-                // 신규
-                const res = await axios.post(
-                    `http://localhost:5000/api/reservations`,
-                    form,
-                    {
-                        headers: { 'x-admin-password': adminPassword },
-                    },
-                );
-                onSuccess(res.data);
-            }
-        } catch (err) {
-            console.error('저장 실패:', err);
-            alert('저장 중 오류가 발생했습니다.');
-        }
+
+        const data: ReservationItemType = {
+            id: reservation?.id || `r${Date.now()}`,
+            title,
+            date,
+            contentType,
+            content: contentType === 'text' ? content : undefined,
+            contentData:
+                contentType === 'table' ? { headers, rows } : undefined,
+        };
+
+        onSubmit(data);
     };
 
     return (
-        <FormWrap onSubmit={handleSubmit}>
-            <FormRow>
-                <label>날짜</label>
+        <FormWrapper onSubmit={handleSubmit}>
+            <label>
+                제목:
                 <input
-                    name="date"
-                    value={form.date}
-                    onChange={handleChange}
-                    required
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
                 />
-            </FormRow>
-
-            <FormRow>
-                <label>제목</label>
-                <input
-                    name="title"
-                    value={form.title}
-                    onChange={handleChange}
-                    required
-                />
-            </FormRow>
-
-            <FormRow>
-                <label>내용 타입</label>
+            </label>
+            <label>
+                날짜:
+                <input value={date} onChange={(e) => setDate(e.target.value)} />
+            </label>
+            <label>
+                타입:
                 <select
-                    name="contentType"
-                    value={form.contentType}
-                    onChange={handleChange}
+                    value={contentType}
+                    onChange={(e) =>
+                        setContentType(
+                            e.target
+                                .value as ReservationItemType['contentType'],
+                        )
+                    }
                 >
-                    <option value="text">Text</option>
-                    <option value="html">HTML</option>
-                    <option value="table">Table</option>
+                    <option value="text">텍스트</option>
+                    <option value="table">테이블</option>
                 </select>
-            </FormRow>
+            </label>
 
-            <FormRow>
-                <label>내용</label>
-                <textarea
-                    name="content"
-                    value={form.content}
-                    onChange={handleChange}
-                    rows={3}
-                />
-            </FormRow>
+            {contentType === 'text' && (
+                <label>
+                    내용:
+                    <textarea
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                </label>
+            )}
 
-            {/* table일 경우 headers/rows 추가 UI 필요시 확장 가능 */}
+            {contentType === 'table' && (
+                <>
+                    <p>테이블 헤더 (쉼표로 구분):</p>
+                    <input
+                        value={headers.join(',')}
+                        onChange={(e) => setHeaders(e.target.value.split(','))}
+                    />
+                    <p>테이블 행 (세미콜론으로 구분, 각 행은 쉼표로 구분):</p>
+                    <textarea
+                        value={rows.map((r) => r.join(',')).join(';')}
+                        onChange={(e) =>
+                            setRows(
+                                e.target.value
+                                    .split(';')
+                                    .map((row) => row.split(',')),
+                            )
+                        }
+                    />
+                </>
+            )}
 
-            <FormButtons>
+            <ButtonGroup>
                 <button type="submit">저장</button>
                 <button type="button" onClick={onCancel}>
-                    취소
+                    닫기
                 </button>
-            </FormButtons>
-        </FormWrap>
+            </ButtonGroup>
+        </FormWrapper>
     );
 }
 
-// =================================================
-// Styled Components
-// =================================================
-const FormWrap = styled.form`
+const FormWrapper = styled.form`
     display: flex;
     flex-direction: column;
     gap: 12px;
-`;
-
-const FormRow = styled.div`
-    display: flex;
-    flex-direction: column;
-
-    label {
-        font-weight: 600;
-        margin-bottom: 4px;
-    }
-
     input,
     select,
     textarea {
+        width: 100%;
         padding: 6px 8px;
-        font-size: 14px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
     }
 `;
 
-const FormButtons = styled.div`
+const ButtonGroup = styled.div`
     display: flex;
     gap: 8px;
-    margin-top: 12px;
-
-    button {
-        padding: 6px 12px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-weight: 600;
-        &:first-child {
-            background: #0077ff;
-            color: #fff;
-        }
-        &:last-child {
-            background: #eee;
-        }
-    }
 `;

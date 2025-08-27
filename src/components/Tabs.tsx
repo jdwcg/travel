@@ -1,5 +1,14 @@
 // src/components/Tabs.tsx
 import { NavLink } from 'react-router-dom';
+
+export default function Tabs() {
+    return (
+        <TabMenu aria-label="여행 탭">
+            <TabButton to="/schedule">여행 일정</TabButton>
+            <TabButton to="/reservation">예약 확인</TabButton>
+        </TabMenu>
+    );
+}
 import styled from 'styled-components';
 
 const TabMenu = styled.nav`
@@ -26,12 +35,3 @@ const TabButton = styled(NavLink)`
         color: #111;
     }
 `;
-
-export default function Tabs() {
-    return (
-        <TabMenu aria-label="여행 탭">
-            <TabButton to="/schedule">여행 일정</TabButton>
-            <TabButton to="/reservation">예약 확인</TabButton>
-        </TabMenu>
-    );
-}

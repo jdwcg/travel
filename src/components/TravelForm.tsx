@@ -121,7 +121,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     value={formData.id}
                     onChange={handleChange}
                     readOnly
-                    placeholder="자동 생성됩니다"
+                    placeholder="자동 생성됩니다."
                     style={{
                         width: '100%',
                         padding: '6px 8px',
@@ -252,7 +252,9 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
                     </div>
                 )}
 
-            <div style={{ display: 'flex', gap: '12px', marginTop: '12px' }}>
+            <div
+                style={{ display: 'flex', gap: '12px', margin: '12px 0 24px' }}
+            >
                 <button
                     type="submit"
                     style={{
