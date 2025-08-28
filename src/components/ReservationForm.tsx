@@ -1,12 +1,14 @@
-import { useState, FormEvent } from 'react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
 import type { ReservationItemType } from '../types/ReservationTypes';
 import styled from 'styled-components';
 import { BaseBtnWrap } from './CommonLayout';
 
 interface ReservationFormProps {
     reservation?: ReservationItemType;
-    onSubmit: (data: ReservationItemType) => void;
-    onCancel: () => void;
+    onSubmit?: (data: ReservationItemType) => void;
+    onCancel?: () => void;
+    onSuccess?: () => void;
 }
 
 export default function ReservationForm({
@@ -40,7 +42,7 @@ export default function ReservationForm({
                 contentType === 'table' ? { headers, rows } : undefined,
         };
 
-        onSubmit(data);
+        onSubmit?.(data);
     };
 
     return (

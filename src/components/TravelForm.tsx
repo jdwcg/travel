@@ -6,6 +6,9 @@ import type { TravelItemType } from '../types/TravelTypes';
 
 interface TravelFormProps {
     travelItem?: TravelItemType; // 수정 시 기존 데이터, 신규일 땐 undefined
+    onAdd?: (newTravel: TravelItemType) => void;
+    onCancel?: () => void; // 취소 버튼 동작
+    onSuccess?: () => void;
 }
 
 export default function TravelForm({ travelItem }: TravelFormProps) {
@@ -218,10 +221,10 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
 
             {/* table contentType일 경우 간단 예시 */}
             {formData.contentType === 'table' &&
-                formData.contentData?.rows?.length > 0 && (
+                (formData.contentData?.rows?.length ?? 0) > 0 && (
                     <div>
                         <h4>테이블 데이터</h4>
-                        {formData.contentData.rows.map((row, rIdx) => (
+                        {formData.contentData?.rows?.map((row, rIdx) => (
                             <div
                                 key={rIdx}
                                 style={{ display: 'flex', gap: '4px' }}

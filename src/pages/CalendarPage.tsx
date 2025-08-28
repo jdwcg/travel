@@ -7,7 +7,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import type { DateClickArg } from '@fullcalendar/interaction';
 import type { EventInput } from '@fullcalendar/core';
 import koLocale from '@fullcalendar/core/locales/ko';
-
+import type { EventClickArg } from '@fullcalendar/core';
 import { useNavigate } from 'react-router-dom';
 
 // 👉 분리한 스타일 불러오기
@@ -69,10 +69,11 @@ export default function CalendarPage() {
         fetchTravelDates();
     }, []);
 
-    const handleEventClick = (clickInfo: {
-        event: { extendedProps: { originalData: TravelItemType } };
-    }) => {
-        const originalData = clickInfo.event.extendedProps.originalData;
+    const handleEventClick = (arg: EventClickArg) => {
+        const originalData = (
+            arg.event.extendedProps as { originalData: TravelItemType }
+        ).originalData;
+
         if (originalData?.id) {
             navigate(`/detail/travel/${originalData.id}`);
         }

@@ -3,7 +3,7 @@
 import axios from 'axios'; // axios 라이브러리를 임포트합니다.
 
 // 현재 웹사이트의 호스트 이름을 기반으로 백엔드 API의 기본 URL을 설정합니다.
-const API_BASE_URL = `http://${window.location.hostname}:5000`; // 백엔드 포트 5000
+const API_BASE_URL = `http://15.165.161.107:5000`; // 백엔드 포트 5000
 
 // ✨✨✨ axios 인스턴스 생성 및 초기화 부분을 인터셉터보다 위로! ✨✨✨
 const axiosClient = axios.create({

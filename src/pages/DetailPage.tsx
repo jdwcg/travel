@@ -6,7 +6,7 @@ import TravelForm from '../components/TravelForm';
 import styled from 'styled-components';
 import { Container, BaseBtnWrap } from '../components/CommonLayout';
 // TravelItemType만 불러오면 돼요! Item은 더 이상 필요 없을 거예요.
-import type { TravelItemType } from '../types/ItemTypes';
+import type { TravelItemType } from '../types/TravelTypes';
 
 export default function TravelDetailPage() {
     // ✨ itemType은 더 이상 필요 없어요! 라우팅에서 이미 'travel'로 특정될 테니까요!

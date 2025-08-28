@@ -35,6 +35,7 @@ const Spacer = styled.div`
 `;
 function ActivityIcon({ type }: { type: TravelItemType['type'] }) {
     const map: Record<TravelItemType['type'], string> = {
+        '': '',
         camping: '🏕️',
         hotel: '🏨',
         activity: '🎒',
