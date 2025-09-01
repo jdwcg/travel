@@ -67,7 +67,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         e.preventDefault();
 
         const password = prompt('관리자 비밀번호 입력');
-        if (password !== '6948') return alert('비밀번호 불일치!');
+        if (password !== '6948!') return alert('비밀번호 불일치!');
 
         try {
             const submitData = { ...formData };

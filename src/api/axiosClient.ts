@@ -15,35 +15,35 @@ const axiosClient = axios.create({
 // ✨✨✨ 이제 인터셉터 부분을 axiosClient 선언 이후로 옮깁니다! ✨✨✨
 
 // 요청 인터셉터 (선택 사항: 요청 전 로깅, 토큰 추가 등을 할 때 유용)
-axiosClient.interceptors.request.use(
-    (config) => {
-        // console.log(`[Axios Request] URL: ${config.url}, Method: ${config.method}`);
-        // 여기에 인증 토큰 등을 헤더에 추가할 수 있습니다.
-        return config;
-    },
-    (error) => {
-        console.error('[Axios Request Error]:', error);
-        return Promise.reject(error);
-    },
-);
+// axiosClient.interceptors.request.use(
+//     (config) => {
+//         // console.log(`[Axios Request] URL: ${config.url}, Method: ${config.method}`);
+//         // 여기에 인증 토큰 등을 헤더에 추가할 수 있습니다.
+//         return config;
+//     },
+//     (error) => {
+//         console.error('[Axios Request Error]:', error);
+//         return Promise.reject(error);
+//     },
+// );
 
-// 응답 인터셉터 (선택 사항: 응답 후 에러 처리, 로딩바 숨기기 등을 할 때 유용)
-axiosClient.interceptors.response.use(
-    (response) => {
-        // console.log('[Axios Response]:', response);
-        return response;
-    },
-    (error) => {
-        console.error(
-            '[Axios Response Error]:',
-            error.response || error.message,
-        );
-        // 예: 401 에러 시 로그인 페이지로 리다이렉트
-        // if (error.response && error.response.status === 401) {
-        //   window.location.href = '/login';
-        // }
-        return Promise.reject(error);
-    },
-);
+// // 응답 인터셉터 (선택 사항: 응답 후 에러 처리, 로딩바 숨기기 등을 할 때 유용)
+// axiosClient.interceptors.response.use(
+//     (response) => {
+//         // console.log('[Axios Response]:', response);
+//         return response;
+//     },
+//     (error) => {
+//         console.error(
+//             '[Axios Response Error]:',
+//             error.response || error.message,
+//         );
+//         // 예: 401 에러 시 로그인 페이지로 리다이렉트
+//         // if (error.response && error.response.status === 401) {
+//         //   window.location.href = '/login';
+//         // }
+//         return Promise.reject(error);
+//     },
+// );
 
 export default axiosClient; // 다른 파일에서 사용할 수 있도록 내보내기

@@ -15,7 +15,7 @@ export default function ReservationCreatePage() {
 
     const handleSubmit = async (data: ReservationItemType) => {
         const password = prompt('관리자 비밀번호를 입력해주세요:');
-        if (password !== '6948') {
+        if (password !== '6948!') {
             alert('비밀번호가 일치하지 않습니다!');
             return; // 비밀번호가 다르면 함수를 여기서 종료합니다.
         }

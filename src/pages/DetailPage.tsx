@@ -55,7 +55,7 @@ export default function TravelDetailPage() {
     const handleDelete = async () => {
         if (!window.confirm('정말 삭제하시겠습니까?')) return;
         const password = prompt('관리자 비밀번호 입력');
-        if (password !== '6948') return alert('비밀번호 불일치!');
+        if (password !== '6948!') return alert('비밀번호 불일치!');
         try {
             await axiosClient.delete(`/api/travelDates/${item.id}`, {
                 headers: { 'x-admin-password': password },
