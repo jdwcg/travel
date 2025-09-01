@@ -8,7 +8,7 @@ const API_BASE_URL = `http://15.165.161.107:5000`; // 백엔드 포트 5000
 // ✨✨✨ axios 인스턴스 생성 및 초기화 부분을 인터셉터보다 위로! ✨✨✨
 const axiosClient = axios.create({
     baseURL: API_BASE_URL,
-    withCredentials: true,
+    // withCredentials: true,
     timeout: 10000,
 });
 
