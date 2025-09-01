@@ -56,7 +56,7 @@ export default function ReservationDetailPage() {
     // ✨ 예약 수정 처리 함수 추가!
     const handleUpdateSubmit = async (updatedData: ReservationItemType) => {
         const password = prompt('관리자 비밀번호를 입력해주세요:');
-        if (password !== '6948!') {
+        if (password !== '8178') {
             alert('비밀번호가 일치하지 않습니다!');
             return;
         }
@@ -83,7 +83,7 @@ export default function ReservationDetailPage() {
         if (!window.confirm('정말 이 예약을 삭제하시겠습니까?')) return;
 
         const password = prompt('관리자 비밀번호를 입력해주세요:');
-        if (password !== '6948!') {
+        if (password !== '8178') {
             alert('비밀번호가 일치하지 않습니다!');
             return;
         }
