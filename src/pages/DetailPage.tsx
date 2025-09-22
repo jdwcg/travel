@@ -8,6 +8,12 @@ import { Container, BaseBtnWrap } from "../components/CommonLayout";
 // TravelItemType만 불러오면 돼요! Item은 더 이상 필요 없을 거예요.
 import type { TravelItemType } from "../types/TravelTypes";
 // import ImageUploader from "../components/ImageUploader";
+import {
+  TopBar,
+  TopBarInner,
+  BarTitle,
+  CloseLink,
+} from "../styles/CalendarStyles";
 export default function TravelDetailPage() {
   // ✨ itemType은 더 이상 필요 없어요! 라우팅에서 이미 'travel'로 특정될 테니까요!
   const { id } = useParams<{ id: string }>();
@@ -70,10 +76,20 @@ export default function TravelDetailPage() {
 
   return (
     <Container>
+      {/* 상단 바 */}
+      <div style={{ marginTop: "64px" }}></div>
+      <TopBar>
+        <TopBarInner>
+          <BarTitle>세부 내용</BarTitle>
+          <CloseLink to="/schedule">×</CloseLink>
+        </TopBarInner>
+      </TopBar>
       {!editing ? (
         <>
           {/* ✨ itemType === 'travel' 조건문 제거! 바로 item 사용! */}
-          <h3>{item.date}일째 여행</h3>
+          <h3 style={{ marginBottom: "20px", color: "#444", fontSize: "15px" }}>
+            {item.date}일째 일정
+          </h3>
           {/* <p>{item.content}</p>{' '} */}
           {/* ✨ item이 TravelItemType이므로 as TravelItemType 필요 없어요! */}
           <div
@@ -84,17 +100,38 @@ export default function TravelDetailPage() {
           >
             {item.content}
           </div>
-          <ButtonsWrap>
-            <BaseBtnWrap>
-              <button onClick={() => setEditing(true)}>수정</button>
-            </BaseBtnWrap>
-            <BaseBtnWrap>
-              <button onClick={handleDelete}>삭제</button>
-            </BaseBtnWrap>
-            <BaseBtnWrap>
-              <button onClick={() => navigate("/schedule")}>닫기</button>
-            </BaseBtnWrap>
-          </ButtonsWrap>
+          <hr
+            style={{
+              border: "none",
+              height: "1px",
+              width: "100%",
+              background: "#eee",
+              display: "inline-block",
+              marginTop: "30px",
+            }}
+          />
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <ButtonsWrap>
+              <BaseBtnWrap>
+                <button onClick={() => setEditing(true)} className="btn_modify">
+                  수정
+                </button>
+              </BaseBtnWrap>
+              <BaseBtnWrap>
+                <button onClick={handleDelete} className="btn_del">
+                  삭제
+                </button>
+              </BaseBtnWrap>
+              <BaseBtnWrap>
+                <button
+                  onClick={() => navigate("/schedule")}
+                  className="btn_cancel"
+                >
+                  취소
+                </button>
+              </BaseBtnWrap>
+            </ButtonsWrap>
+          </div>
         </>
       ) : (
         // ✨ item이 TravelItemType이므로 as TravelItemType 필요 없어요!

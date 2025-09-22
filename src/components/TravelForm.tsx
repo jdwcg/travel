@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 import { useNavigate } from "react-router-dom";
 import type { TravelItemType } from "../types/TravelTypes";
+import styled from "styled-components";
 
 interface TravelFormProps {
   travelItem?: TravelItemType; // 수정 시 기존 데이터, 신규일 땐 undefined
@@ -14,7 +15,6 @@ interface TravelFormProps {
 export default function TravelForm({ travelItem }: TravelFormProps) {
   const navigate = useNavigate();
 
-  // form state 초기화
   const [formData, setFormData] = useState<TravelItemType>({
     id: "",
     date: "",
@@ -41,11 +41,22 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-    console.log("변경된 값:", name, value);
+
+    setFormData((prev) => {
+      const newData = { ...prev, [name]: value };
+
+      // 날짜가 바뀌면 day 자동 계산
+      if (name === "date" && value) {
+        const dateObj = new Date(value);
+        const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
+        newData.day = dayMap[dateObj.getDay()] as TravelItemType["day"];
+      }
+
+      return newData;
+    });
   };
 
-  // table data 변경 핸들러 예시
+  // table data 변경 핸들러
   const handleTableCellChange = (
     rowIndex: number,
     colIndex: number,
@@ -59,7 +70,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
       ...prev,
       contentData: { ...prev.contentData, rows: newRows },
     }));
-    console.log("테이블 변경:", newRows);
   };
 
   // submit 핸들러
@@ -75,14 +85,15 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
       // 신규인 경우 id 생성
       if (!submitData.id) submitData.id = Date.now().toString();
 
+      // type 자동 채움
+      if (!submitData.type) submitData.type = "activity";
+
       if (travelItem?.id) {
-        // 수정
         await axiosClient.put(`/api/travelDates/${submitData.id}`, submitData, {
           headers: { "x-admin-password": password },
         });
         alert("수정 완료!");
       } else {
-        // 신규
         await axiosClient.post(`/api/travelDates`, submitData, {
           headers: { "x-admin-password": password },
         });
@@ -96,10 +107,13 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
     }
   };
 
-  // 취소 버튼 핸들러
+  // 취소 버튼
   const handleCancel = () => {
     navigate(-1);
   };
+
+  // 날짜에서 일(day)만 화면에 보여주기
+  const displayDayOnly = formData.date ? formData.date.split("-")[2] : "";
 
   return (
     <form
@@ -112,28 +126,11 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         margin: "0 auto",
       }}
     >
+      {/* 날짜 */}
       <div>
-        <label>ID:</label>
+        <LabelBase>날짜:</LabelBase>
         <input
-          type="text"
-          name="id"
-          value={formData.id}
-          onChange={handleChange}
-          readOnly
-          placeholder="자동 생성됩니다."
-          style={{
-            width: "100%",
-            padding: "6px 8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
-      </div>
-
-      <div>
-        <label>날짜:</label>
-        <input
-          type="text"
+          type="date"
           name="date"
           value={formData.date}
           onChange={handleChange}
@@ -145,44 +142,17 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
             border: "1px solid #ccc",
           }}
         />
+        {/* 선택한 날짜의 '일'만 표시 */}
+        {displayDayOnly && (
+          <div style={{ marginTop: "4px", color: "#555" }}>
+            선택된 날짜: {displayDayOnly}일
+          </div>
+        )}
       </div>
 
+      {/* 내용 */}
       <div>
-        <label>요일:</label>
-        <input
-          type="text"
-          name="day"
-          value={formData.day}
-          onChange={handleChange}
-          placeholder="예: 월"
-          style={{
-            width: "100%",
-            padding: "6px 8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
-      </div>
-
-      <div>
-        <label>활동 유형:</label>
-        <input
-          type="text"
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
-          placeholder="예: camping, hotel, activity, food"
-          style={{
-            width: "100%",
-            padding: "6px 8px",
-            borderRadius: "4px",
-            border: "1px solid #ccc",
-          }}
-        />
-      </div>
-
-      <div>
-        <label>내용:</label>
+        <LabelBase>내용:</LabelBase>
         <textarea
           name="content"
           value={formData.content}
@@ -198,8 +168,9 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         />
       </div>
 
+      {/* 숙소 */}
       <div>
-        <label>숙소:</label>
+        <LabelBase>숙소:</LabelBase>
         <select
           name="lodging"
           value={formData.lodging || ""}
@@ -217,7 +188,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         </select>
       </div>
 
-      {/* table contentType일 경우 간단 예시 */}
+      {/* table contentType */}
       {formData.contentType === "table" &&
         (formData.contentData?.rows?.length ?? 0) > 0 && (
           <div>
@@ -244,7 +215,22 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
           </div>
         )}
 
+      {/* 버튼 */}
       <div style={{ display: "flex", gap: "12px", margin: "12px 0 24px" }}>
+        <button
+          type="button"
+          onClick={handleCancel}
+          style={{
+            flex: 1,
+            padding: "8px",
+            borderRadius: "4px",
+            border: "1px solid #ddd",
+            color: "#777",
+            fontSize: "16px",
+          }}
+        >
+          취소
+        </button>
         <button
           type="submit"
           style={{
@@ -254,25 +240,17 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
             background: "#4caf50",
             color: "white",
             border: "none",
+            fontSize: "16px",
           }}
         >
           저장
-        </button>
-        <button
-          type="button"
-          onClick={handleCancel}
-          style={{
-            flex: 1,
-            padding: "8px",
-            borderRadius: "4px",
-            background: "#f44336",
-            color: "white",
-            border: "none",
-          }}
-        >
-          취소
         </button>
       </div>
     </form>
   );
 }
+
+export const LabelBase = styled.label`
+  display: inline-block;
+  margin-bottom: 14px;
+`;
