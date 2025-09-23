@@ -1,20 +1,21 @@
 // src/components/TravelForm.tsx
 import { useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
-import { useNavigate } from "react-router-dom";
 import type { TravelItemType } from "../types/TravelTypes";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 interface TravelFormProps {
-  travelItem?: TravelItemType; // 수정 시 기존 데이터, 신규일 땐 undefined
-  onAdd?: (newTravel: TravelItemType) => void;
-  onCancel?: () => void; // 취소 버튼 동작
-  onSuccess?: () => void;
+  travelItem?: TravelItemType; // 수정 시 기존 데이터
+  onAdd?: (newTravel: TravelItemType) => void; // 추가 완료 콜백
+  onCancel?: () => void; // 취소 콜백
 }
 
-export default function TravelForm({ travelItem }: TravelFormProps) {
-  const navigate = useNavigate();
-
+export default function TravelForm({
+  travelItem,
+  onAdd,
+  onCancel,
+}: TravelFormProps) {
   const [formData, setFormData] = useState<TravelItemType>({
     id: "",
     date: "",
@@ -41,11 +42,9 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
     >
   ) => {
     const { name, value } = e.target;
-
     setFormData((prev) => {
       const newData = { ...prev, [name]: value };
 
-      // 날짜가 바뀌면 day 자동 계산
       if (name === "date" && value) {
         const dateObj = new Date(value);
         const dayMap = ["일", "월", "화", "수", "목", "금", "토"];
@@ -56,7 +55,7 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
     });
   };
 
-  // table data 변경 핸들러
+  // table cell 변경
   const handleTableCellChange = (
     rowIndex: number,
     colIndex: number,
@@ -82,37 +81,48 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
     try {
       const submitData = { ...formData };
 
-      // 신규인 경우 id 생성
+      // 신규일 경우 id 생성
       if (!submitData.id) submitData.id = Date.now().toString();
 
-      // type 자동 채움
       if (!submitData.type) submitData.type = "activity";
 
       if (travelItem?.id) {
+        // 수정
         await axiosClient.put(`/api/travelDates/${submitData.id}`, submitData, {
           headers: { "x-admin-password": password },
         });
         alert("수정 완료!");
+        window.location.reload();
       } else {
+        // 신규 추가
         await axiosClient.post(`/api/travelDates`, submitData, {
           headers: { "x-admin-password": password },
         });
         alert("추가 완료!");
       }
 
-      navigate(`/detail/travel/${submitData.id}`, { replace: true });
+      // 부모에게 추가/수정 완료 알리기
+      if (onAdd) onAdd(submitData);
     } catch (err: any) {
       console.error("저장 실패:", err.response || err);
       alert(`저장 실패! ${err.response?.data?.message || err.message}`);
     }
   };
+  const navigate = useNavigate();
 
   // 취소 버튼
   const handleCancel = () => {
-    navigate(-1);
+    if (onCancel) {
+      onCancel();
+    } else if (formData.id) {
+      // 수정 상태에서 단독 페이지일 경우
+      navigate(`/detail/travel/${formData.id}`, { replace: false });
+    } else {
+      // 신규 추가 상태에서 단독 페이지라면 목록 등으로 이동
+      navigate("/schedule", { replace: false });
+    }
   };
 
-  // 날짜에서 일(day)만 화면에 보여주기
   const displayDayOnly = formData.date ? formData.date.split("-")[2] : "";
 
   return (
@@ -126,7 +136,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         margin: "0 auto",
       }}
     >
-      {/* 날짜 */}
       <div>
         <LabelBase>날짜:</LabelBase>
         <input
@@ -142,7 +151,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
             border: "1px solid #ccc",
           }}
         />
-        {/* 선택한 날짜의 '일'만 표시 */}
         {displayDayOnly && (
           <div style={{ marginTop: "4px", color: "#555" }}>
             선택된 날짜: {displayDayOnly}일
@@ -150,7 +158,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         )}
       </div>
 
-      {/* 내용 */}
       <div>
         <LabelBase>내용:</LabelBase>
         <textarea
@@ -168,7 +175,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         />
       </div>
 
-      {/* 숙소 */}
       <div>
         <LabelBase>숙소:</LabelBase>
         <select
@@ -188,7 +194,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
         </select>
       </div>
 
-      {/* table contentType */}
       {formData.contentType === "table" &&
         (formData.contentData?.rows?.length ?? 0) > 0 && (
           <div>
@@ -215,7 +220,6 @@ export default function TravelForm({ travelItem }: TravelFormProps) {
           </div>
         )}
 
-      {/* 버튼 */}
       <div style={{ display: "flex", gap: "12px", margin: "12px 0 24px" }}>
         <button
           type="button"
