@@ -107,7 +107,8 @@ export const ReservationItem = styled.div`
 /* List / Table 스타일 */
 export const ListWrapper = styled.div`
   overflow: hidden;
-  /* border-top: 1px solid #ddd; */
+  margin-top: 20px;
+  border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
   background: #fff;
 `;
@@ -121,7 +122,15 @@ export const ListHeader = styled.div`
   border-bottom: 1px solid #f1f1f1;
 `;
 
-export const ListBody = styled.div``;
+export const ListBody = styled.div`
+  .date {
+    display: flex;
+    /* flex: 1; */
+    min-width: 120px;
+    margin: 0 8px;
+    padding-left: 0 !important;
+  }
+`;
 
 export const HeaderCell = styled.div<{ basis?: string }>`
   flex: 0 0 ${({ basis }) => basis || "auto"};

@@ -8,16 +8,12 @@ import {
   BaseBtnWrap,
   LodgingTag,
   ListWrapper,
-  ListHeader,
   ListBody,
-  HeaderCell,
-  HeaderContentCell,
   StyledLink,
   ItemCell,
   ItemDateCell,
   ItemContentCell,
   TextContent,
-  // IconSpan,
   COL_WIDTH_DAY,
   COL_WIDTH_DATE,
   PageWrap,
@@ -33,17 +29,6 @@ import styled from "styled-components";
 const Spacer = styled.div`
   margin-top: 80px;
 `;
-// function ActivityIcon({ type }: { type: TravelItemType["type"] }) {
-//   const map: Record<TravelItemType["type"], string> = {
-//     "": "",
-//     camping: "🏕️",
-//     hotel: "🏨",
-//     activity: "🎒",
-//     food: "🍽️",
-//   };
-//   return <IconSpan aria-hidden>{map[type] ?? ""}</IconSpan>;
-// }
-
 export default function SchedulePage() {
   const [travelDates, setTravelDates] = useState<TravelItemType[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +42,15 @@ export default function SchedulePage() {
       const response = await axiosClient.get<TravelItemType[]>(
         "/api/travelDates"
       );
-      setTravelDates(response.data);
+
+      // ✅ 정렬 추가
+      const sortedData = response.data.sort(
+        (a, b) =>
+          (parseInt(a.date.replace(/-/g, "")) || 0) -
+            (parseInt(b.date.replace(/-/g, "")) || 0) ||
+          a.id.localeCompare(b.id)
+      );
+      setTravelDates(sortedData);
     } catch (err) {
       console.error("여행 일정 데이터를 불러오는 데 실패했습니다:", err);
       setError(
@@ -137,12 +130,6 @@ export default function SchedulePage() {
         )}
 
         <ListWrapper>
-          <ListHeader>
-            <HeaderCell basis={COL_WIDTH_DAY}>day</HeaderCell>
-            <HeaderCell basis={COL_WIDTH_DATE}>date</HeaderCell>
-            <HeaderContentCell>content</HeaderContentCell>
-          </ListHeader>
-
           <ListBody>
             {travelDates.length > 0
               ? travelDates.map((item) => (
@@ -155,14 +142,15 @@ export default function SchedulePage() {
                   >
                     <ItemCell basis={COL_WIDTH_DAY}>{item.day}</ItemCell>
                     <ItemDateCell
+                      className="date"
                       basis={COL_WIDTH_DATE}
                       isWeekend={item.day === "토" || item.day === "일"}
                     >
                       {/* {item.date ? item.date.split("-")[2] : ""} */}
                       {item.date
-                        ? `${item.date.split("-")[0]}년 ${
+                        ? `${item.date.split("-")[0]}. ${
                             item.date.split("-")[1]
-                          }월 ${item.date.split("-")[2]}일`
+                          }. ${item.date.split("-")[2]}`
                         : ""}
                     </ItemDateCell>
                     <ItemContentCell title={item.content}>
